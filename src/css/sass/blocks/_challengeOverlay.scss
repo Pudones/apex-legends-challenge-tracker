@@ -1,0 +1,129 @@
+@use '../util' as u;
+
+.create-challenge-overlay {
+  position: absolute;
+  background: #691a1c;
+  width: 100%;
+  min-height: 100%;
+  z-index: 3;
+  padding: 15px;
+
+  .pick-challenge-type,
+  .pick-challenge-subtype {
+    @include u.flexCenter--column;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .pick-challenge-type {
+
+    .challenge-types {
+      @include u.flexCenter--column;
+      gap: 15px;
+
+      input {
+        display: none;
+      }
+
+      label {
+        @include u.flexCenter--column;
+
+        h2 {
+          order: 2;
+        }
+
+        img {
+          width: 175px;
+          height: 175px;
+          border: 5px solid navy;
+          transition: .5s;
+        }
+      }
+    }
+  }
+
+  .pick-challenge-subtype {
+    display: none;
+
+    .challenge-subtypes {
+      @include u.flexCenter--column;
+      gap: 15px;
+
+      // input {
+      //   display: none;
+      // }
+
+      label {
+        @include u.flexCenter--column;
+
+        h2 {
+          order: 2;
+        }
+
+        img {
+          width: 175px;
+          height: 175px;
+          border: 5px solid navy;
+          transition: .5s;
+        }
+      }
+    }
+
+    .challenge-subtypes--legends {
+      display: none;
+    }
+  }
+
+
+}
+
+.pick-challenge-legends {
+  @include u.flexCenter;
+  flex-wrap: wrap;
+  display: none;
+
+  @include u.forDesktop {
+    max-width: 1700px;
+    margin: 0 auto;
+  }
+
+  // input {
+  //   display: none;
+  // }
+
+  h2 {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  img {
+    border: 5px solid navy;
+    height: 200px;
+
+    @include u.forDesktop {
+      height: 300px;
+    }
+  }
+}
+
+.pick-challenge-submit {
+  display: block;
+  padding: 15px;
+  margin: 0 auto;
+  font-size: 1.5rem;
+  background: rgb(68, 23, 58);;
+  border: 3px solid black;
+  color: white;
+  font-weight: 700;
+}
+
+
+// Modifier on selected elements.
+.--borderGreen.--borderGreen.--borderGreen.--borderGreen {
+  border-color: green;
+  transform: scale(0.9);
+}

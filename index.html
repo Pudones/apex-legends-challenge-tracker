@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Legends Challenge Tracker</title>
+  <link rel="stylesheet" href="./src/css/main.css">
+  <script defer src="./src/js/nav.js"></script>
+  <script defer src="./src/js/index.js"></script>
+</head>
+
+<body>
+
+  <div class="create-challenge-overlay none">
+
+    <div class="pick-challenge-type">
+      <h2>Pick challenge type:</h2>
+
+      <div class="challenge-types">
+        <input type="radio" name="typeChallenge" id="typeLegends">
+        <label for="typeLegends">
+          <h2>Legends</h2>
+          <img src="./assets/images/icons/legends-icon.svg" alt="Challenges with Legends">
+        </label>
+
+        <input type="radio" name="typeChallenge" id="typeWeapons">
+        <label for="typeWeapons">
+          <h2>Weapons</h2>
+          <img src="./assets/images/icons/weapons-icon.svg" alt="Challenges with Weapons">
+        </label>
+      </div>
+
+    </div>
+
+    <div class="pick-challenge-subtype">
+      <h2 class="text-center">Pick challenge subtype:</h2>
+
+      <div class="challenge-subtypes challenge-subtypes--legends">
+        <input type="radio" name="challengeSubtypes" id="subtypePlay">
+        <label for="subtypePlay">
+          <h2>Play with Legends</h2>
+          <img src="./assets/images/placeholder.png" alt="Play with Legends">
+        </label>
+
+        <input type="radio" name="challengeSubtypes" id="subtypeDamage">
+        <label for="subtypeDamage">
+          <h2>Damage with Legends</h2>
+          <img src="./assets/images/placeholder.png" alt="Damage with Legends">
+        </label>
+
+        <input type="radio" name="challengeSubtypes" id="subtypeKills">
+        <label for="subtypeKills">
+          <h2>Kills with Legends</h2>
+          <img src="./assets/images/placeholder.png" alt="Kills with Legends">
+        </label>
+      </div>
+    </div>
+
+    <div class="pick-challenge-legends">
+      <input type="checkbox" name="ash" id="ash">
+      <label for="ash">
+        <h2>Ash</h2>
+        <img src="./assets/images/legends/ash.png" alt="Ash">
+      </label>
+
+      <input type="checkbox" name="ballistic" id="ballistic">
+      <label for="ballistic">
+        <h2>Ballistic</h2>
+        <img src="./assets/images/legends/ballistic.png" alt="Ballistic">
+      </label>
+
+      <input type="checkbox" name="bangalore" id="bangalore">
+      <label for="bangalore">
+        <h2>Bangalore</h2>
+        <img src="./assets/images/legends/bangalore.png" alt="Bangalore">
+      </label>
+
+      <input type="checkbox" name="bloodhound" id="bloodhound">
+      <label for="bloodhound">
+        <h2>Bloodhound</h2>
+        <img src="./assets/images/legends/bloodhound.png" alt="Bloodhound">
+      </label>
+
+      <input type="checkbox" name="catalyst" id="catalyst">
+      <label for="catalyst">
+        <h2>Catalyst</h2>
+        <img src="./assets/images/legends/catalyst.png" alt="Catalyst">
+      </label>
+
+      <input type="checkbox" name="caustic" id="caustic">
+      <label for="caustic">
+        <h2>Caustic</h2>
+        <img src="./assets/images/legends/caustic.png" alt="Caustic">
+      </label>
+
+      <input type="checkbox" name="crypto" id="crypto">
+      <label for="crypto">
+        <h2>Crypto</h2>
+        <img src="./assets/images/legends/crypto.png" alt="Crypto">
+      </label>
+
+      <input type="checkbox" name="fuse" id="fuse">
+      <label for="fuse">
+        <h2>Fuse</h2>
+        <img src="./assets/images/legends/fuse.png" alt="Fuse">
+      </label>
+
+      <input type="checkbox" name="gibraltar" id="gibraltar">
+      <label for="gibraltar">
+        <h2>Gibraltar</h2>
+        <img src="./assets/images/legends/gibraltar.png" alt="Gibraltar">
+      </label>
+
+      <input type="checkbox" name="horizon" id="horizon">
+      <label for="horizon">
+        <h2>Horizon</h2>
+        <img src="./assets/images/legends/horizon.png" alt="Horizon">
+      </label>
+
+      <input type="checkbox" name="lifeline" id="lifeline">
+      <label for="lifeline">
+        <h2>Lifeline</h2>
+        <img src="./assets/images/legends/lifeline.png" alt="Lifeline">
+      </label>
+
+      <input type="checkbox" name="loba" id="loba">
+      <label for="loba">
+        <h2>Loba</h2>
+        <img src="./assets/images/legends/loba.png" alt="Loba">
+      </label>
+
+      <input type="checkbox" name="maggie" id="maggie">
+      <label for="maggie">
+        <h2>Mad Maggie</h2>
+        <img src="./assets/images/legends/maggie.png" alt="Mad Maggie">
+      </label>
+
+      <input type="checkbox" name="mirage" id="mirage">
+      <label for="mirage">
+        <h2>Mirage</h2>
+        <img src="./assets/images/legends/mirage.png" alt="Mirage">
+      </label>
+
+      <input type="checkbox" name="newcastle" id="newcastle">
+      <label for="newcastle">
+        <h2>Newcastle</h2>
+        <img src="./assets/images/legends/newcastle.png" alt="Newcastle">
+      </label>
+
+      <input type="checkbox" name="octane" id="octane">
+      <label for="octane">
+        <h2>Octane</h2>
+        <img src="./assets/images/legends/octane.png" alt="Octane">
+      </label>
+
+      <input type="checkbox" name="pathfinder" id="pathfinder">
+      <label for="pathfinder">
+        <h2>Pathfinder</h2>
+        <img src="./assets/images/legends/pathfinder.png" alt="Pathfinder">
+      </label>
+
+      <input type="checkbox" name="rampart" id="rampart">
+      <label for="rampart">
+        <h2>Rampart</h2>
+        <img src="./assets/images/legends/rampart.png" alt="Rampart">
+      </label>
+
+      <input type="checkbox" name="revenant" id="revenant">
+      <label for="revenant">
+        <h2>Revenant</h2>
+        <img src="./assets/images/legends/revenant.png" alt="Revenant">
+      </label>
+
+      <input type="checkbox" name="seer" id="seer">
+      <label for="seer">
+        <h2>Seer</h2>
+        <img src="./assets/images/legends/seer.png" alt="Seer">
+      </label>
+
+      <input type="checkbox" name="valkyrie" id="valkyrie">
+      <label for="valkyrie">
+        <h2>Valkyrie</h2>
+        <img src="./assets/images/legends/valkyrie.png" alt="Valkyrie">
+      </label>
+
+      <input type="checkbox" name="vantage" id="vantage">
+      <label for="vantage">
+        <h2>Vantage</h2>
+        <img src="./assets/images/legends/vantage.png" alt="Vantage">
+      </label>
+
+      <input type="checkbox" name="wattson" id="wattson">
+      <label for="wattson">
+        <h2>Wattson</h2>
+        <img src="./assets/images/legends/wattson.png" alt="Wattson">
+      </label>
+
+      <input type="checkbox" name="wraith" id="wraith">
+      <label for="wraith">
+        <h2>Wraith</h2>
+        <img src="./assets/images/legends/wraith.png" alt="Wraith">
+      </label>
+    </div>
+
+    <div class="pick-challenge-weapons">
+    </div>
+
+    <button class="pick-challenge-submit">Create Challenge</button>
+
+  </div>
+
+  <header>
+
+    <button class="header-button">Abrir Menu</button>
+
+    <nav class="nav">
+
+      <ul class="nav-ul">
+        <li class="nav-li">
+          <a id="nav-link--challenges" class="nav-link" href="#challenges">Challenges</a>
+        </li>
+
+        <li class="nav-li">
+          <a class="nav-link" href="#optimize">Optimize</a>
+        </li>
+
+        <li class="nav-li">
+          <a class="nav-link" href="#help">Help</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <div class="challenges-wrapper">
+
+      <div class="no-challenges-created none">
+        <h1 class="no-challenges-text">You got no challenges here!</h1>
+        <a class="create-challenge-button" href="#">Create a challenge</a>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+@use '../util' as u;
+
+.header-button {
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  width: 50px;
+  height: 50px;
+
+  z-index: 2;
+
+  @include u.forDesktop {
+    display: none;
+  }
+}
+
+header {
+  @include u.flexCenter;
+
+  @include u.forDesktop {
+    padding: 10px;
+  }
+
+  .nav {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background: rgb(36, 68, 40);
+
+    @include u.forDesktop {
+      position: initial;
+      width: auto;
+      height: auto;
+    }
+
+
+    .nav-ul {
+      @include u.flexCenter--column;
+      height: 100%;
+      list-style: none;
+
+      @include u.forDesktop {
+        flex-direction: row;
+        gap: 5px;
+      }
+
+      .nav-li {
+        color: white;
+        font-size: 1.2rem;
+        font-family: "Apex", sans-serif;
+        letter-spacing: 2.5px;
+
+        .nav-link {
+          @include u.flexCenter;
+          margin: 0 auto;
+          background: linear-gradient(0deg, var(--button-main-color) 70%, var(--button-secondary-color) 100%);
+
+          border-bottom: 5px solid;
+          border-image-slice: 1;
+          border-image-source:
+            linear-gradient(to right,
+              var(--button-border-first-third-color),
+              var(--button-border-second-color),
+              var(--button-border-first-third-color));
+
+          min-height: 50px;
+          min-width: 300px;
+          
+          color: white;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+.nav--opened.nav--opened {
+  top: 0;
+}

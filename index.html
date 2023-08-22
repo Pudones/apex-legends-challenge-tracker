@@ -7,13 +7,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apex Legends Challenge Tracker</title>
   <link rel="stylesheet" href="./src/css/main.css">
-  <script defer src="./src/js/nav.js"></script>
   <script defer src="./src/js/index.js"></script>
 </head>
 
 <body>
 
+  <div class="blur-overlay none"></div>
+
   <div class="create-challenge-overlay none">
+
+    <div class="challenge-preview none">
+      <p class="challenge-preview-text">PLACEHOLDER</p>
+    </div>
 
     <div class="pick-challenge-type">
       <h2>Pick challenge type:</h2>
@@ -35,6 +40,7 @@
     </div>
 
     <div class="pick-challenge-subtype">
+
       <h2 class="text-center">Pick challenge subtype:</h2>
 
       <div class="challenge-subtypes challenge-subtypes--legends">
@@ -56,6 +62,29 @@
           <img src="./assets/images/placeholder.png" alt="Kills with Legends">
         </label>
       </div>
+
+      <div class="challenge-subtypes challenge-subtypes--weapons">
+
+        <input type="radio" name="challengeSubtypeWeapons" id="subtypeDamageWpn">
+        <label for="subtypeDamageWpn">
+          <h2>Damage with Weapons</h2>
+          <img src="./assets/images/placeholder.png" alt="Damage with Weapons">
+        </label>
+
+        <input type="radio" name="challengeSubtypeWeapons" id="subtypeKnockdownWpn">
+        <label for="subtypeKnockdownWpn">
+          <h2>Knockdowns with Weapons</h2>
+          <img src="./assets/images/placeholder.png" alt="Knockdowns with Weapons">
+        </label>
+
+        <input type="radio" name="challengeSubtypeWeapons" id="subtypeKillsWpn">
+        <label for="subtypeKillsWpn">
+          <h2>Kills with Weapons</h2>
+          <img src="./assets/images/placeholder.png" alt="Kills with Weapons">
+        </label>
+
+      </div>
+
     </div>
 
     <div class="pick-challenge-legends">
@@ -205,6 +234,53 @@
     </div>
 
     <div class="pick-challenge-weapons">
+      <input type="radio" name="pick-challenge-radio-name" id="assault">
+      <label for="assault">
+        <h2>Assault Rifles</h2>
+        <img src="./assets/images/icons/weaponClasses/AR.svg" alt="Assault Rifles">
+      </label>
+
+      <input type="radio" name="pick-challenge-radio-name" id="lmg">
+      <label for="lmg">
+        <h2>Light Machine Guns</h2>
+        <img src="./assets/images/icons/weaponClasses/LMG.svg" alt="Light Machine Guns">
+      </label>
+
+      <input type="radio" name="pick-challenge-radio-name" id="marksman">
+      <label for="marksman">
+        <h2>Marksmans</h2>
+        <img src="./assets/images/icons/weaponClasses/Marksman.svg" alt="Marksmans">
+      </label>
+
+      <input type="radio" name="pick-challenge-radio-name" id="pistols">
+      <label for="pistols">
+        <h2>Pistols</h2>
+        <img src="./assets/images/icons/weaponClasses/Pistols.svg" alt="Pistols">
+      </label>
+
+      <input type="radio" name="pick-challenge-radio-name" id="shotguns">
+      <label for="shotguns">
+        <h2>Shotguns</h2>
+        <img src="./assets/images/icons/weaponClasses/Shotguns.svg" alt="Shotguns">
+      </label>
+
+      <input type="radio" name="pick-challenge-radio-name" id="smg">
+      <label for="smg">
+        <h2>Sub Machine Guns</h2>
+        <img src="./assets/images/icons/weaponClasses/SMG.svg" alt="Sub Machine Guns">
+      </label>
+
+      <input type="radio" name="pick-challenge-radio-name" id="sniper">
+      <label for="sniper">
+        <h2>Sniper Rifles</h2>
+        <img src="./assets/images/icons/weaponClasses/Sniper.svg" alt="Sniper Rifles">
+      </label>
+
+      <input type="radio" name="pick-challenge-radio-name" id="specialwpn">
+      <label for="specialwpn">
+        <h2>Red Tier Weapons</h2>
+        <img src="./assets/images/icons/weaponClasses/Special.svg" alt="Special Weapons">
+      </label>
     </div>
 
     <button class="pick-challenge-submit">Create Challenge</button>
@@ -240,6 +316,20 @@
       <div class="no-challenges-created none">
         <h1 class="no-challenges-text">You got no challenges here!</h1>
         <a class="create-challenge-button" href="#">Create a challenge</a>
+      </div>
+
+      <div class="challenges--legends">
+        <h2>Legends Challenges</h2>
+
+        <!-- <div class="challenges-created">
+          <p class="challenges-created-text">Damage with Horizon, Bangalore, Bloodhound.</p>
+          <button class="challenges-created-delete"></button>
+        </div> -->
+
+      </div>
+
+      <div class="challenges--weapons">
+        <h2>Weapon Challenges</h2>
       </div>
 
     </div>

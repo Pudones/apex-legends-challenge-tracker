@@ -1,15 +1,26 @@
 @use '../util' as u;
 
-.create-challenge-overlay {
+.blur-overlay {
   position: absolute;
-  background: #691a1c;
-  width: 100%;
-  min-height: 100%;
+  inset: 0;
+  backdrop-filter: blur(70px);
+  z-index: 2;
+}
+
+.create-challenge-overlay {
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(95, 156, 177, 0.3);
+
+  position: fixed;
+  overflow-y: scroll;
+  inset: 0;
+
   z-index: 3;
   padding: 15px;
 
-  .pick-challenge-type,
-  .pick-challenge-subtype {
+  .pick-challenge-type, .pick-challenge-subtype {
     @include u.flexCenter--column;
   }
 
@@ -53,9 +64,9 @@
       @include u.flexCenter--column;
       gap: 15px;
 
-      // input {
-      //   display: none;
-      // }
+      input {
+        display: none;
+      }
 
       label {
         @include u.flexCenter--column;
@@ -73,15 +84,48 @@
       }
     }
 
-    .challenge-subtypes--legends {
+    .challenge-subtypes--legends, .challenge-subtypes--weapons {
       display: none;
+    }
+
+
+  }
+
+  .pick-challenge-submit {
+    display: none;
+    padding: 15px;
+    margin: 0 auto;
+    font-size: 1.5rem;
+    background: rgb(68, 23, 58);;
+    border: 3px solid black;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .5s;
+
+    &:hover {
+      background-color: blue;
     }
   }
 
-
 }
 
-.pick-challenge-legends {
+.challenge-preview {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(64, 116, 164, 0.3);
+  backdrop-filter: blur(50px);
+  color: white;
+  padding: 10px;
+  text-align: center;
+  z-index: 5;
+  min-width: 50%;
+  font-size: 1.5rem;
+}
+
+.pick-challenge-legends, .pick-challenge-weapons {
   @include u.flexCenter;
   flex-wrap: wrap;
   display: none;
@@ -91,9 +135,13 @@
     margin: 0 auto;
   }
 
-  // input {
-  //   display: none;
-  // }
+  input {
+    display: none;
+  }
+  
+  label {
+    margin-bottom: 50px;
+  }
 
   h2 {
     font-size: 2rem;
@@ -110,15 +158,16 @@
   }
 }
 
-.pick-challenge-submit {
-  display: block;
-  padding: 15px;
-  margin: 0 auto;
-  font-size: 1.5rem;
-  background: rgb(68, 23, 58);;
-  border: 3px solid black;
-  color: white;
-  font-weight: 700;
+.pick-challenge-weapons label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 25%;
+}
+
+.pick-challenge-weapons img {
+  width: 300px;
 }
 
 

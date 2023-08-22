@@ -6,8 +6,16 @@
   margin: 0 auto;
 }
 
-.none {
+.no-scroll {
+  overflow: hidden;
+}
+
+.none.none.none.none {
   display: none;
+}
+
+.block.block.block.block {
+  display: block;
 }
 
 .flex.flex.flex.flex {

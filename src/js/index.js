@@ -1,157 +1,367 @@
-const legendsPick = document.querySelector(".pick-challenge-legends");
+// Blocks
+const bodyElement = document.body;
+const overlay = document.querySelector(".create-challenge-overlay");
 const challengeSubtypesWrapper = document.querySelector(".pick-challenge-subtype");
+const challengeSubtypesNode = document.querySelectorAll(".challenge-subtypes");
 const challengeSubtypeLegends = document.querySelector(".challenge-subtypes--legends");
+const challengeSubtypeWeapons = document.querySelector(".challenge-subtypes--weapons");
+const legendsPick = document.querySelector(".pick-challenge-legends");
+const weaponsPick = document.querySelector(".pick-challenge-weapons");
+const createdChallengesWrapper = document.querySelector(".challenges-wrapper");
+const createdChallengesLegends = document.querySelector(".challenges--legends");
+const createdChallengesWeapons = document.querySelector(".challenges--weapons");
+const challengePreview = document.querySelector(".challenge-preview");
+const challengePreviewText = document.querySelector(".challenge-preview-text");
+const challengesCreated = document.getElementsByClassName("challenges-created");
+const challengeDeleteBtnCollection = document.getElementsByClassName("challenges-created-delete");
+
+// Inputs
 const challengeTypeInput = document.querySelectorAll(".challenge-types input");
 const challengeSubtypeInput = document.querySelectorAll(".challenge-subtypes input");
 const legendsInput = document.querySelectorAll(".pick-challenge-legends input");
+const weaponsInput = document.querySelectorAll(".pick-challenge-weapons input");
 
+// Elements, Validations and other stuff
+const blurOverlay = document.querySelector(".blur-overlay");
+const nav = document.querySelector(".nav");
+const headerNavButton = document.querySelector(".header-button");
+const navChallengesLink = document.querySelector("#nav-link--challenges");
+const createChallengeButton = document.querySelector(".create-challenge-button");
 const submit = document.querySelector(".pick-challenge-submit");
 
-const overlay = document.querySelector(".create-challenge-overlay");
+let selectedItemsArray = [];
+let selectedItem;
+let challengeTypeSelected;
+let challengeSubtypeVar;
+let isNavOpen;
 
-const navChallengesLink = document.querySelector("#nav-link--challenges");
-navChallengesLink.addEventListener("click", () => {
-  const nav = document.querySelector(".nav");
-  nav.classList.toggle("nav--opened");
+const weaponClasses = ["Assault Rifles", "Light Machine Guns", "Marksman", "Pistols", "Shotguns", "Sub Machine Guns", "Sniper Rifles", "Red Tier Weapons"];
 
-  overlay.classList.toggle("none");
+// Along the code, some conditionals will refer as type 1 and 2.
+// The numbers mean: 1. Legends - 2. Weapons
+
+headerNavButton.addEventListener("click", () => {
+  if (isNavOpen) {
+    nav.classList.remove("nav--opened");
+    isNavOpen = false;
+    bodyElement.classList.remove("no-scroll");
+    return;
+  }
+
+  nav.classList.add("nav--opened");
+  isNavOpen = true;
+  bodyElement.classList.add("no-scroll");
 });
 
-let arrayDeLendas = [];
+// Handler for the click on the navbar that opens the challenge creation.
+navChallengesLink.addEventListener("click", () => {
+  nav.classList.toggle("nav--opened");
+  overlay.classList.toggle("none");
+  submit.classList.remove("block");
+  document.body.classList.remove("no-scroll");
+  blurOverlay.classList.remove("none");
+  isNavOpen = false;
+});
+// Same as the above, but instead of the element being clicked be the link on the nav, it's a button that appears when there's no challenge created. It's not a good practice to "appoint problems" to the users without giving them a solution.
+createChallengeButton.addEventListener("click", () => {
+  overlay.classList.toggle("none");
+  submit.classList.remove("block");
+  document.body.classList.remove("no-scroll");
+  blurOverlay.classList.remove("none");
+})
 
-uncheckAll = () => {
-  arrayDeLendas = [];
+const toggleBorder = el => el.classList.toggle("--borderGreen");
 
-  const inputs = [challengeTypeInput, challengeSubtypeInput, legendsInput];
+const resetBorder = arr => {
+  for (el of arr) el.nextElementSibling.children[1].classList.remove("--borderGreen");
+}
 
-  for (el of inputs) resetBorder(el);
+const showContent = content => content.classList.add("flex");
 
-  for (el of challengeSubtypeInput) el.checked = false;
+const resetContentVisibility = arr => {
+  for (el of arr) el.classList.remove("flex");
+}
 
-  for (el of legendsInput) {
-    el.checked = false;
-    el.disabled = false;
+const uncheckAll = arr => {
+  for (member of arr) {
+    for (el of member) {
+      el.nextElementSibling.children[1].classList.remove("--borderGreen");
+      el.checked = false;
+    }
   }
 }
 
-// Function to display elements
-displayElement = el => el.classList.add("flex");
+const formatSubtypeText = sub => {
+  const subtypes = ["Play", "Damage", "Kills", "Knockdowns"];
 
-// Functions to handle border visibility in order to feedback the user selection.
-applyBorder = el => el.nextElementSibling.children[1].classList.toggle("--borderGreen");
-resetBorder = arr => arr.forEach(el => el.nextElementSibling.children[1].classList.remove("--borderGreen"));
-
-resetAllElementsVisibility = () => {
-  const toggleStylesArray = [legendsPick, challengeSubtypesWrapper, challengeSubtypeLegends];
-  toggleStylesArray.forEach(el => el.classList.remove("flex"));
+  if (sub.id === "subtypePlay") return subtypes[0];
+  if (sub.id === "subtypeDamage" || sub.id === "subtypeDamageWpn") return subtypes[1];
+  if (sub.id === "subtypeKills" || sub.id === "subtypeKillsWpn") return subtypes[2];
+  if (sub.id === "subtypeKnockdown" || sub.id === "subtypeKnockdownWpn") return subtypes[3];
 }
 
-// 1. CHOOSE CHALLENGE TYPE
-challengeTypeInput.forEach(el => el.addEventListener("change", () => {
+const formatLegendNames = legend => {
+  const legendString = legend.id;
+  const firstLetter = legendString.charAt(0).toUpperCase();
+  const remainder = legendString.slice(1);
 
-  // Every time the user changes the selection of the radio buttons here, the styles reset.
-  uncheckAll();
-  resetAllElementsVisibility();
+  return firstLetter + remainder;
+}
 
-  // Apply a selection border on the selected element
-  applyBorder(el);
+const formatWeaponName = weapon => {
+  if (weapon.id === "assault") return weaponClasses[0];
+  if (weapon.id === "lmg") return weaponClasses[1];
+  if (weapon.id === "marksman") return weaponClasses[2];
+  if (weapon.id === "pistols") return weaponClasses[3];
+  if (weapon.id === "shotguns") return weaponClasses[4];
+  if (weapon.id === "smg") return weaponClasses[5];
+  if (weapon.id === "sniper") return weaponClasses[6];
+  if (weapon.id === "specialwpn") return weaponClasses[7];
+}
 
-  // 0 = Legends | 1 = Weapons |
-  if (challengeTypeInput[0].checked) {
-    console.log("Legend challenges.");
-    displayElement(challengeSubtypesWrapper);
-    displayElement(challengeSubtypeLegends);
+const generateChallengeText = () => {
+  const subtype = formatSubtypeText(challengeSubtypeVar);
+
+  // 1. Legends | 2. Weapons
+
+  if (challengeTypeSelected === 1) {
+    const [selection1, selection2, selection3] = [formatLegendNames(selectedItemsArray[0]), formatLegendNames(selectedItemsArray[1]), formatLegendNames(selectedItemsArray[2])];
+
+    const phrase = `${subtype} with ${selection1}, ${selection2}, ${selection3}.`;
+
+    return phrase;
   }
 
-  if (challengeTypeInput[1].checked) {
-    console.log("Weapon challenges.");
+  if (challengeTypeSelected === 2) {
+    const weaponName = formatWeaponName(selectedItem);
+
+    const phrase = `${subtype} with ${weaponName}.`;
+
+    return phrase;
   }
-}));
+}
 
-// 2. CHOOSE CHALLENGE SUBTYPE
-challengeSubtypeInput.forEach(el => el.addEventListener("change", () => {
-  resetBorder(challengeSubtypeInput);
-  applyBorder(el);
-  displayElement(legendsPick);
-}));
+const handlePreview = () => {
+  const previewSubtype = formatSubtypeText(challengeSubtypeVar);
 
-// 3. HANDLING THE CHOICES OF THE SPECIFICS OF EACH SUBTYPE
-let selectionLocked = null;
+  if (challengeTypeSelected === 1) {
+    if (selectedItemsArray.length === 0)
+      return challengePreviewText.textContent = `${previewSubtype} with`;
 
-const challengesWrapper = document.querySelector(".challenges-wrapper");
+    if (selectedItemsArray.length === 1)
+      return challengePreviewText.textContent = `${previewSubtype} with ${formatLegendNames(selectedItemsArray[0])}`;
 
+    if (selectedItemsArray.length === 2)
+      return challengePreviewText.textContent = `${previewSubtype} with ${formatLegendNames(selectedItemsArray[0])}, ${formatLegendNames(selectedItemsArray[1])}`;
+
+    if (selectedItemsArray.length === 3)
+      return challengePreviewText.textContent = `${previewSubtype} with ${formatLegendNames(selectedItemsArray[0])}, ${formatLegendNames(selectedItemsArray[1])}, ${formatLegendNames(selectedItemsArray[2])}.`;
+  }
+
+  if (challengeTypeSelected === 2) {
+    !selectedItem ? challengePreviewText.textContent = `${previewSubtype} with` : challengePreviewText.textContent = `${previewSubtype} with ${formatWeaponName(selectedItem)}.`;
+  }
+}
+
+function handleSelection() {
+  const borderElement = this.nextElementSibling.children[1];
+
+  if (challengeTypeSelected === 2) {
+    resetBorder(weaponsInput);
+
+    toggleBorder(borderElement);
+    selectedItem = this;
+
+    handlePreview();
+
+    submit.classList.add("block");
+    submit.scrollIntoView({ behavior: "smooth" });
+    console.log("Weapon Selection:");
+    console.log(selectedItem);
+    return;
+  }
+
+  // If the Selection already has this element, remove it from the array (IE: Second click on a element)
+  if (selectedItemsArray.includes(this)) {
+    toggleBorder(borderElement);
+    selectedItemsArray.splice(selectedItemsArray.indexOf(this), 1);
+    handlePreview();
+    return;
+  }
+
+  // If the Selection already has 3 elements, block the check on the 4th and inform the user.
+  if (selectedItemsArray.length === 3) {
+    this.checked = false;
+    alert("Selection full!");
+    return;
+  }
+
+  toggleBorder(borderElement);
+  selectedItemsArray.push(this);
+
+  handlePreview();
+
+  // After 3 elements are selected, scroll to the Submit Button.
+  if (selectedItemsArray.length === 3) {
+    submit.classList.add("block");
+    submit.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+const createChallengeCard = challenge => {
+  const challengeDiv = document.createElement("div");
+  challengeDiv.classList.add("challenges-created");
+
+  const challengeText = document.createElement("p");
+  challengeText.classList.add("challenges-created-text");
+  challengeText.textContent = challenge;
+
+  const challengeDeleteBtn = document.createElement("button");
+  challengeDeleteBtn.classList.add("challenges-created-delete");
+  challengeDeleteBtn.addEventListener("click", el => {
+    el.target.parentNode.remove();
+    saveChallenges();
+    checkChallengesCreatedState();
+  });
+  challengeDiv.appendChild(challengeDeleteBtn);
+
+
+  challengeDiv.appendChild(challengeText);
+
+  if (challengeTypeSelected === 1) createdChallengesLegends.appendChild(challengeDiv);
+  if (challengeTypeSelected === 2) createdChallengesWeapons.appendChild(challengeDiv);
+}
+
+const saveChallenges = () => {
+  const getChallengesText = document.getElementsByClassName("challenges-created-text");
+  const savedChallenges = [];
+  // console.log(getChallengesText);
+
+  Array.from(getChallengesText).forEach(el => savedChallenges.push(el.innerText));
+
+  const challengesJSON = JSON.stringify(savedChallenges);
+
+  localStorage.setItem("apexChallengesJSON", challengesJSON);
+}
+
+const checkChallengesCreatedState = () => {
+  const challengeCategories = [createdChallengesLegends, createdChallengesWeapons];
+  const challengesCreatedNone = document.querySelector(".no-challenges-created");
+
+  if (challengesCreated.length === 0) {
+    createdChallengesWrapper.style.justifyContent = "center";
+    challengeCategories.forEach(el => el.classList.add("none"));
+    challengesCreatedNone.classList.remove("none");
+  } else {
+    createdChallengesWrapper.style.justifyContent = "flex-start";
+    challengeCategories.forEach(el => el.classList.remove("none"));
+    challengesCreatedNone.classList.add("none");
+  }
+}
+
+// IIFE that will retrieve all the challenges previously created (if there's any)
 (() => {
-  legendsInput.forEach(el => el.addEventListener("change", handleLegendSelection));
+  const retrievedChallenges = JSON.parse(localStorage.getItem("apexChallengesJSON"));
+  if (!retrievedChallenges) return;
 
-  function handleLegendSelection() {
-    // Means that if "THIS" is already on Array (I.E. Already clicked) the if will remove it from the array.
-    if (arrayDeLendas.includes(this)) {
-      if (selectionLocked) return;
-
-      applyBorder(this);
-      arrayDeLendas.splice(arrayDeLendas.indexOf(this), 1);
-      console.log(arrayDeLendas);
-      return;
+  for (el of retrievedChallenges) {
+    // If any string from weaponClasses Array is included in the Object of localStorage, return true and create the challenge based on the weapon types (challengeTypeSelected = 2)
+    // Weapons are used to "filter" here, cause there's less weapon types than Legends.
+    if (weaponClasses.some(weapon => el.includes(weapon))) {
+      challengeTypeSelected = 2;
+      createChallengeCard(el);
     }
 
-    // When the array receives the third element, he will handle the addition in the array and will lock the other checkboxes to prevent further selections.
-    if (arrayDeLendas.length > 1) {
-      applyBorder(this);
-      arrayDeLendas.push(this);
-
-      console.log("Last Element:", arrayDeLendas);
-      const checkboxesNotChecked = document.querySelectorAll(".pick-challenge-legends input:not(:checked)");
-      checkboxesNotChecked.forEach(el => el.disabled = true);
-      selectionLocked = true;
-      return;
+    // Otherwise, will be a Legend Challenge.
+    else {
+      challengeTypeSelected = 1;
+      createChallengeCard(el);
     }
-
-    applyBorder(this);
-    arrayDeLendas.push(this);
-    console.log(arrayDeLendas);
   }
-
-  function montarFrase() {
-
-    let challengeTypeVar, challengeSubtypeVar, legendsPickedVar;
-
-    challengeSubtypeInput.forEach(el => el.addEventListener("change", () => {
-      console.log("Subtipo:", el);
-      if (el.id === "subtypePlay") {
-        challengeSubtypeVar = "Play";
-      }
-      if (el.id === "subtypeDamage") {
-        challengeSubtypeVar = "Damage";
-      }
-      if (el.id === "subtypeKills") {
-        challengeSubtypeVar = "Kills";
-      }
-    }));
-
-    formattedName = el => {
-      const firstLetter = el.charAt(0).toUpperCase();
-      const remainderOfString = el.slice(1);
-      return firstLetter + remainderOfString;
-    }
-
-    formFrase = () => {
-      const challengeCreatedDiv = document.createElement("div");
-      challengeCreatedDiv.classList.add("challenges--created");
-    
-      const challengeCreatedP = document.createElement("p");
-      challengeCreatedP.textContent = `${challengeSubtypeVar} with ${formattedName(arrayDeLendas[0].id)}, ${formattedName(arrayDeLendas[1].id)}, ${formattedName(arrayDeLendas[2].id)}`;
-      challengeCreatedDiv.appendChild(challengeCreatedP);
-    
-      challengesWrapper.appendChild(challengeCreatedDiv);
-
-      overlay.classList.toggle("none");
-      resetAllElementsVisibility();
-      uncheckAll();
-    }
-
-    submit.addEventListener("click", formFrase);
-  }
-
-  montarFrase();
 })();
 
+/*
+  The methodology behind the logic of the Event Listeners below, is that every timea a element will be executed as an argument to a function, first, we gotta reset the previous state so it will be "clean" before receiving the new stuff.
+*/
+
+// 1.
+challengeTypeInput.forEach(el => el.addEventListener("change", el => {
+  const typeInput = el.target;
+  const borderElement = typeInput.nextElementSibling.children[1];
+  const checkboxesArr = [challengeSubtypeInput, legendsInput, weaponsInput];
+  const picksArr = [legendsPick, weaponsPick];
+
+  // Resets (Emptying the selection array, reseting visual elements...)
+  selectedItemsArray = [];
+  uncheckAll(checkboxesArr);
+  resetBorder(challengeTypeInput);
+  resetContentVisibility(challengeSubtypesNode);
+  resetContentVisibility(picksArr);
+
+  toggleBorder(borderElement);
+  showContent(challengeSubtypesWrapper); // Just the title
+
+  if (typeInput.id === "typeLegends") {
+    challengeTypeSelected = 1;
+    showContent(challengeSubtypeLegends);
+  }
+
+  if (typeInput.id === "typeWeapons") {
+    challengeTypeSelected = 2;
+    showContent(challengeSubtypeWeapons);
+  }
+
+  challengeSubtypesWrapper.scrollIntoView({ behavior: "smooth" });
+}));
+
+// 2.
+challengeSubtypeInput.forEach(el => el.addEventListener("change", el => {
+  const subtypeInput = el.target;
+  const borderElement = subtypeInput.nextElementSibling.children[1];
+
+  console.log(subtypeInput)
+  challengeSubtypeVar = subtypeInput;
+
+  challengePreview.classList.remove("none");
+
+  resetBorder(challengeSubtypeInput);
+  toggleBorder(borderElement);
+
+  handlePreview();
+
+  if (challengeTypeSelected === 1) {
+    showContent(legendsPick);
+    legendsPick.scrollIntoView({ behavior: "smooth" });
+  }
+
+  if (challengeTypeSelected === 2) {
+    showContent(weaponsPick);
+    weaponsPick.scrollIntoView({ behavior: "smooth" });
+  }
+}));
+
+// 3
+legendsInput.forEach(el => el.addEventListener("change", handleSelection));
+
+weaponsInput.forEach(el => el.addEventListener("change", handleSelection));
+
+submit.addEventListener("click", () => {
+  // Arrays referencing elements that need to be reseted when the user submit a challenge so they can start again.
+  const divsArr = [challengeSubtypesWrapper, challengeSubtypeLegends, challengeSubtypeWeapons, legendsPick, weaponsPick];
+  const checkboxesArr = [challengeTypeInput, challengeSubtypeInput, legendsInput, weaponsInput];
+  const challengeText = generateChallengeText();
+
+  createChallengeCard(challengeText);
+  saveChallenges();
+
+  // Resets after the user creates the challenge
+  uncheckAll(checkboxesArr);
+  resetContentVisibility(divsArr);
+  overlay.classList.add("none");
+  challengePreview.classList.add("none");
+  blurOverlay.classList.add("none");
+
+  checkChallengesCreatedState();
+});
+
+checkChallengesCreatedState();

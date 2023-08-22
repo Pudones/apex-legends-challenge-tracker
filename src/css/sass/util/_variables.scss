@@ -1,9 +1,10 @@
 :root {
   // Color variables to match the season color scheme more easily.
-  --button-main-color: #11277b;
-  --button-secondary-color: #282f46;
+  --button-main-color: #866550;
+  --button-main-color--lowOpacity: #86655080;
+  --button-secondary-color: #100c0a;
   
   // The border on the buttons is a gradient that works like: colorX, colorY, colorX, so the variable below is name "first" and "third" to emphasize that.
-  --button-border-first-third-color: #d5b051;
-  --button-border-second-color: #fbdfa6;
+  --button-border-first-third-color: #ff6232;
+  --button-border-second-color: #ffbaa9;
 }

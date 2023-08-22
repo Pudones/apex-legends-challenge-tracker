@@ -18,6 +18,7 @@
 
 header {
   @include u.flexCenter;
+  background: #691a1d67;
 
   @include u.forDesktop {
     padding: 10px;
@@ -30,6 +31,7 @@ header {
     height: 100vh;
     width: 100%;
     background: rgb(36, 68, 40);
+    z-index: 1;
 
     @include u.forDesktop {
       position: initial;
@@ -57,7 +59,11 @@ header {
         .nav-link {
           @include u.flexCenter;
           margin: 0 auto;
-          background: linear-gradient(0deg, var(--button-main-color) 70%, var(--button-secondary-color) 100%);
+          // background: linear-gradient(0deg, var(--button-main-color) 70%, var(--button-secondary-color) 100%);
+          background: linear-gradient(0deg, 
+          var(--button-main-color) 10%, 
+          var(--button-main-color--lowOpacity) 70%, 
+          var(--button-secondary-color) 100%);
 
           border-bottom: 5px solid;
           border-image-slice: 1;

@@ -23,6 +23,9 @@ const weaponsInput = document.querySelectorAll(".pick-challenge-weapons input");
 
 // Elements, Validations and other stuff
 const blurOverlay = document.querySelector(".blur-overlay");
+const confirmationOverlay = document.querySelector(".confirmation-overlay");
+const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
+const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
 const nav = document.querySelector(".nav");
 const headerNavButton = document.querySelector(".header-button");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
@@ -77,6 +80,8 @@ const resetBorder = arr => {
 }
 
 const showContent = content => content.classList.add("flex");
+
+const addNoneClass = content => content.classList.add("none");
 
 const resetContentVisibility = arr => {
   for (el of arr) el.classList.remove("flex");
@@ -216,18 +221,41 @@ const createChallengeCard = challenge => {
   challengeText.classList.add("challenges-created-text");
   challengeText.textContent = challenge;
 
+  const challengeCompleteBtn = document.createElement("button");
+  challengeCompleteBtn.classList.add("challenges-created-complete-btn");
+  challengeCompleteBtn.addEventListener("click", el => {
+    el.target.nextElementSibling.classList.remove("none");
+
+  });
+  challengeDiv.appendChild(challengeCompleteBtn);
+
+
+  const challengeCompleteOverlay = document.createElement("div");
+  challengeCompleteOverlay.classList.add("challenges-created--completed", "none");
+  challengeDiv.appendChild(challengeCompleteOverlay);
+
+
   const challengeDeleteBtn = document.createElement("button");
   challengeDeleteBtn.classList.add("challenges-created-delete");
   challengeDeleteBtn.addEventListener("click", el => {
-    el.target.parentNode.remove();
-    saveChallenges();
-    checkChallengesCreatedState();
+    confirmationOverlay.classList.remove("none");
+
+    confirmationYesBtn.addEventListener("click", () => {
+      el.target.parentNode.remove();
+      saveChallenges();
+      checkChallengesCreatedState();
+      confirmationOverlay.classList.add("none");
+    })
+
+    confirmationNoBtn.addEventListener("click", () => {
+      confirmationOverlay.classList.add("none");
+      return;
+    })
   });
   challengeDiv.appendChild(challengeDeleteBtn);
 
 
   challengeDiv.appendChild(challengeText);
-
   if (challengeTypeSelected === 1) createdChallengesLegends.appendChild(challengeDiv);
   if (challengeTypeSelected === 2) createdChallengesWeapons.appendChild(challengeDiv);
 }
@@ -244,6 +272,7 @@ const saveChallenges = () => {
   localStorage.setItem("apexChallengesJSON", challengesJSON);
 }
 
+// This function handles if the "No Challenges" text will appear
 const checkChallengesCreatedState = () => {
   const challengeCategories = [createdChallengesLegends, createdChallengesWeapons];
   const challengesCreatedNone = document.querySelector(".no-challenges-created");
@@ -254,7 +283,10 @@ const checkChallengesCreatedState = () => {
     challengesCreatedNone.classList.remove("none");
   } else {
     createdChallengesWrapper.style.justifyContent = "flex-start";
-    challengeCategories.forEach(el => el.classList.remove("none"));
+    // If the second child from the element is undefined, that means that it doesn't exist, so we assume that there's no Challenge Created in this category, then it's safe to hide the Title until the user create a challenge.
+    challengeCategories.forEach(el =>
+      el.children[1] === undefined ? el.classList.add("none") : el.classList.remove("none")
+    );
     challengesCreatedNone.classList.add("none");
   }
 }
@@ -293,10 +325,12 @@ challengeTypeInput.forEach(el => el.addEventListener("change", el => {
 
   // Resets (Emptying the selection array, reseting visual elements...)
   selectedItemsArray = [];
+  selectedItem = null;
   uncheckAll(checkboxesArr);
   resetBorder(challengeTypeInput);
   resetContentVisibility(challengeSubtypesNode);
   resetContentVisibility(picksArr);
+  addNoneClass(challengePreview);
 
   toggleBorder(borderElement);
   showContent(challengeSubtypesWrapper); // Just the title

@@ -5,14 +5,25 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apex Legends Challenge Tracker</title>
+  <title>Apex Legends | Challenge Tracker</title>
   <link rel="stylesheet" href="./src/css/main.css">
   <script defer src="./src/js/index.js"></script>
+  <link rel="shortcut icon" href="./assets/images/icons/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
 
   <div class="blur-overlay none"></div>
+
+  <div class="confirmation-overlay none">
+    <div class="confirmation-window">
+      <h2>Do you really want to delete this challenge?</h2>
+      <h2 class="none">Do you really want to delete all completed challenges?</h2>
+
+      <button class="confirmation-btn confirmation-btn--yes">Yes</button>
+      <button class="confirmation-btn confirmation-btn--no">No</button>
+    </div>
+  </div>
 
   <div class="create-challenge-overlay none">
 
@@ -322,7 +333,11 @@
         <h2>Legends Challenges</h2>
 
         <!-- <div class="challenges-created">
+          <div class="challenges-created--completed">COMPLETED CHALLENGE</div>
+
           <p class="challenges-created-text">Damage with Horizon, Bangalore, Bloodhound.</p>
+
+          <button class="challenges-created-complete-btn"></button>
           <button class="challenges-created-delete"></button>
         </div> -->
 

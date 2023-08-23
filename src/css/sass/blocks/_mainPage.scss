@@ -49,19 +49,35 @@
 
   .challenges-created {
     position: relative;
-    background: rgba(60, 60, 103, 0.3);
+    background: rgba(60, 60, 103, 1);
     font-size: 1.5rem;
     width: 100%;
     padding: 20px;
 
-    &-delete {
+    &--completed {
+      @include u.flexCenter;
+      position: absolute;
+      background: rgba(8, 8, 8, 0.7);
+      inset: 0;
+    }
+
+    &-complete-btn, &-delete {
       position: absolute;
       width: 20px;
       height: 20px;
+      border: none;
+    }
+
+    &-complete-btn {
+      left: 0;
+      bottom: 0;
+      background: green;
+    }
+
+    &-delete {
       right: 0;
       bottom: 0;
       background: rgb(148, 27, 27);
-      border: none;
     }
   }
 

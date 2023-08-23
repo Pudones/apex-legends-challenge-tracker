@@ -4,7 +4,7 @@
   position: absolute;
   inset: 0;
   backdrop-filter: blur(70px);
-  z-index: 2;
+  z-index: 3;
 }
 
 .create-challenge-overlay {
@@ -17,7 +17,7 @@
   overflow-y: scroll;
   inset: 0;
 
-  z-index: 3;
+  z-index: 4;
   padding: 15px;
 
   .pick-challenge-type, .pick-challenge-subtype {
@@ -31,6 +31,7 @@
   }
 
   .pick-challenge-type {
+    padding-top: 70px;
 
     .challenge-types {
       @include u.flexCenter--column;
@@ -59,6 +60,7 @@
 
   .pick-challenge-subtype {
     display: none;
+    padding-top: 70px;
 
     .challenge-subtypes {
       @include u.flexCenter--column;
@@ -129,6 +131,7 @@
   @include u.flexCenter;
   flex-wrap: wrap;
   display: none;
+  padding-top: 70px;
 
   @include u.forDesktop {
     max-width: 1700px;

@@ -22,6 +22,7 @@
     border: none;
     border-radius: 5px;
     box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
   }
 
   .pick-challenge-type, .pick-challenge-subtype {
@@ -99,11 +100,12 @@
 
   .pick-challenge-submit {
     display: none;
-    padding: 15px;
+    padding: 25px;
     margin: 0 auto;
     font-size: 1.5rem;
-    background: rgb(68, 23, 58);;
-    border: 3px solid black;
+    background: rgb(68, 23, 58);
+    border: 1px solid black;
+    border-radius: 5px;
     color: white;
     font-weight: 700;
     cursor: pointer;
@@ -147,16 +149,19 @@
   }
   
   label {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 50px;
   }
 
   h2 {
     font-size: 2rem;
     margin: 0;
+    order: 2;
   }
 
   img {
-    border: 5px solid navy;
+    border: 3px solid navy;
     height: 200px;
 
     @include u.forDesktop {

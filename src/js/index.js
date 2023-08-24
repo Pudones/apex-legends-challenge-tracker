@@ -21,7 +21,7 @@ const challengeSubtypeInput = document.querySelectorAll(".challenge-subtypes inp
 const legendsInput = document.querySelectorAll(".pick-challenge-legends input");
 const weaponsInput = document.querySelectorAll(".pick-challenge-weapons input");
 
-// Elements, Validations and other stuff
+// Elements, Validations, Control Variables and other stuff
 const blurOverlay = document.querySelector(".blur-overlay");
 const confirmationOverlay = document.querySelector(".confirmation-overlay");
 const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
@@ -29,16 +29,27 @@ const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
 const nav = document.querySelector(".nav");
 const headerNavButton = document.querySelector(".header-button");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
-const createChallengeButton = document.querySelector(".create-challenge-button");
+const createChallengeTextLink = document.querySelector(".create-challenge-link");
+const createChallengeBackBtn = document.querySelector(".create-challenge-back-btn");
 const submit = document.querySelector(".pick-challenge-submit");
 
 let selectedItemsArray = [];
 let selectedItem;
+
 let challengeTypeSelected;
 let challengeSubtypeVar;
+
 let isNavOpen;
 
+// Arrays
+// This array handle all the elements that somehow impact visibility (IE. Types, Subtypes, Grid to pick Weapons and Legends, etc.)
+const divsArr = [challengeSubtypesWrapper, challengeSubtypeLegends, challengeSubtypeWeapons, legendsPick, weaponsPick];
+// This array handle all the elements that have checkboxes.
+const checkboxesArr = [challengeTypeInput, challengeSubtypeInput, legendsInput, weaponsInput];
+// This array handle the formatting of Weapon Classes names.
 const weaponClasses = ["Assault Rifles", "Light Machine Guns", "Marksman", "Pistols", "Shotguns", "Sub Machine Guns", "Sniper Rifles", "Red Tier Weapons"];
+
+
 
 // Along the code, some conditionals will refer as type 1 and 2.
 // The numbers mean: 1. Legends - 2. Weapons
@@ -66,18 +77,31 @@ navChallengesLink.addEventListener("click", () => {
   isNavOpen = false;
 });
 // Same as the above, but instead of the element being clicked be the link on the nav, it's a button that appears when there's no challenge created. It's not a good practice to "appoint problems" to the users without giving them a solution.
-createChallengeButton.addEventListener("click", () => {
+createChallengeTextLink.addEventListener("click", () => {
   overlay.classList.toggle("none");
   submit.classList.remove("block");
   document.body.classList.remove("no-scroll");
   blurOverlay.classList.remove("none");
-})
+});
+
+createChallengeBackBtn.addEventListener("click", () => {
+  selectedItemsArray = [];
+  selectedItem = null;
+
+  uncheckAll(checkboxesArr);
+  resetContentVisibility(divsArr);
+  overlay.classList.add("none");
+  challengePreview.classList.add("none");
+  blurOverlay.classList.add("none");
+
+  checkChallengesCreatedState();
+});
 
 const toggleBorder = el => el.classList.toggle("--borderGreen");
 
 const resetBorder = arr => {
   for (el of arr) el.nextElementSibling.children[1].classList.remove("--borderGreen");
-}
+};
 
 const showContent = content => content.classList.add("flex");
 
@@ -85,7 +109,7 @@ const addNoneClass = content => content.classList.add("none");
 
 const resetContentVisibility = arr => {
   for (el of arr) el.classList.remove("flex");
-}
+};
 
 const uncheckAll = arr => {
   for (member of arr) {
@@ -94,7 +118,7 @@ const uncheckAll = arr => {
       el.checked = false;
     }
   }
-}
+};
 
 const formatSubtypeText = sub => {
   const subtypes = ["Play", "Damage", "Kills", "Knockdowns"];
@@ -103,7 +127,7 @@ const formatSubtypeText = sub => {
   if (sub.id === "subtypeDamage" || sub.id === "subtypeDamageWpn") return subtypes[1];
   if (sub.id === "subtypeKills" || sub.id === "subtypeKillsWpn") return subtypes[2];
   if (sub.id === "subtypeKnockdown" || sub.id === "subtypeKnockdownWpn") return subtypes[3];
-}
+};
 
 const formatLegendNames = legend => {
   const legendString = legend.id;
@@ -111,7 +135,7 @@ const formatLegendNames = legend => {
   const remainder = legendString.slice(1);
 
   return firstLetter + remainder;
-}
+};
 
 const formatWeaponName = weapon => {
   if (weapon.id === "assault") return weaponClasses[0];
@@ -122,7 +146,7 @@ const formatWeaponName = weapon => {
   if (weapon.id === "smg") return weaponClasses[5];
   if (weapon.id === "sniper") return weaponClasses[6];
   if (weapon.id === "specialwpn") return weaponClasses[7];
-}
+};
 
 const generateChallengeText = () => {
   const subtype = formatSubtypeText(challengeSubtypeVar);
@@ -144,7 +168,7 @@ const generateChallengeText = () => {
 
     return phrase;
   }
-}
+};
 
 const handlePreview = () => {
   const previewSubtype = formatSubtypeText(challengeSubtypeVar);
@@ -166,7 +190,7 @@ const handlePreview = () => {
   if (challengeTypeSelected === 2) {
     !selectedItem ? challengePreviewText.textContent = `${previewSubtype} with` : challengePreviewText.textContent = `${previewSubtype} with ${formatWeaponName(selectedItem)}.`;
   }
-}
+};
 
 function handleSelection() {
   const borderElement = this.nextElementSibling.children[1];
@@ -211,7 +235,7 @@ function handleSelection() {
     submit.classList.add("block");
     submit.scrollIntoView({ behavior: "smooth" });
   }
-}
+};
 
 const createChallengeCard = challenge => {
   const challengeDiv = document.createElement("div");
@@ -238,19 +262,17 @@ const createChallengeCard = challenge => {
   const challengeDeleteBtn = document.createElement("button");
   challengeDeleteBtn.classList.add("challenges-created-delete");
   challengeDeleteBtn.addEventListener("click", el => {
+    const element = el.target.parentNode;
     confirmationOverlay.classList.remove("none");
 
-    confirmationYesBtn.addEventListener("click", () => {
-      el.target.parentNode.remove();
+    confirmationYesBtn.onclick = () => {
+      element.remove();
       saveChallenges();
       checkChallengesCreatedState();
       confirmationOverlay.classList.add("none");
-    })
+    }
 
-    confirmationNoBtn.addEventListener("click", () => {
-      confirmationOverlay.classList.add("none");
-      return;
-    })
+    confirmationNoBtn.onclick = () => confirmationOverlay.classList.add("none");
   });
   challengeDiv.appendChild(challengeDeleteBtn);
 
@@ -258,7 +280,7 @@ const createChallengeCard = challenge => {
   challengeDiv.appendChild(challengeText);
   if (challengeTypeSelected === 1) createdChallengesLegends.appendChild(challengeDiv);
   if (challengeTypeSelected === 2) createdChallengesWeapons.appendChild(challengeDiv);
-}
+};
 
 const saveChallenges = () => {
   const getChallengesText = document.getElementsByClassName("challenges-created-text");
@@ -270,7 +292,7 @@ const saveChallenges = () => {
   const challengesJSON = JSON.stringify(savedChallenges);
 
   localStorage.setItem("apexChallengesJSON", challengesJSON);
-}
+};
 
 // This function handles if the "No Challenges" text will appear
 const checkChallengesCreatedState = () => {
@@ -289,7 +311,7 @@ const checkChallengesCreatedState = () => {
     );
     challengesCreatedNone.classList.add("none");
   }
-}
+};
 
 // IIFE that will retrieve all the challenges previously created (if there's any)
 (() => {
@@ -313,7 +335,7 @@ const checkChallengesCreatedState = () => {
 })();
 
 /*
-  The methodology behind the logic of the Event Listeners below, is that every timea a element will be executed as an argument to a function, first, we gotta reset the previous state so it will be "clean" before receiving the new stuff.
+  The methodology behind the logic of the Event Listeners below, is that every time a element will be executed as an argument to a function, first, we gotta reset the previous state so it will be "clean" before receiving the new stuff.
 */
 
 // 1.
@@ -380,9 +402,6 @@ legendsInput.forEach(el => el.addEventListener("change", handleSelection));
 weaponsInput.forEach(el => el.addEventListener("change", handleSelection));
 
 submit.addEventListener("click", () => {
-  // Arrays referencing elements that need to be reseted when the user submit a challenge so they can start again.
-  const divsArr = [challengeSubtypesWrapper, challengeSubtypeLegends, challengeSubtypeWeapons, legendsPick, weaponsPick];
-  const checkboxesArr = [challengeTypeInput, challengeSubtypeInput, legendsInput, weaponsInput];
   const challengeText = generateChallengeText();
 
   createChallengeCard(challengeText);

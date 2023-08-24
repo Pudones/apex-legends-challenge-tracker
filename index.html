@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./src/css/main.css">
   <script defer src="./src/js/index.js"></script>
   <link rel="shortcut icon" href="./assets/images/icons/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -27,8 +28,12 @@
 
   <div class="create-challenge-overlay none">
 
+    <button class="create-challenge-back-btn">
+      <img src="./assets/images/icons/arrow_back.svg" alt="Back Arrow">
+    </button>
+
     <div class="challenge-preview none">
-      <p class="challenge-preview-text">PLACEHOLDER</p>
+      <p class="challenge-preview-text"></p>
     </div>
 
     <div class="pick-challenge-type">
@@ -326,7 +331,7 @@
 
       <div class="no-challenges-created none">
         <h1 class="no-challenges-text">You got no challenges here!</h1>
-        <a class="create-challenge-button" href="#">Create a challenge</a>
+        <a class="create-challenge-link" href="#">Create a challenge</a>
       </div>
 
       <div class="challenges--legends">

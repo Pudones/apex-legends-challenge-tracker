@@ -247,15 +247,32 @@ const createChallengeCard = challenge => {
 
   const challengeCompleteBtn = document.createElement("button");
   challengeCompleteBtn.classList.add("challenges-created-complete-btn");
-  challengeCompleteBtn.addEventListener("click", el => {
-    el.target.nextElementSibling.classList.remove("none");
 
+  challengeCompleteBtn.addEventListener("click", el => {
+    const elementParent = el.target.parentNode;
+    const elementCompleteOverlay = el.target.nextElementSibling;
+
+
+    if (elementParent.getAttribute("challengecomplete") === "true") {
+      elementParent.setAttribute("challengecomplete", "false");
+      elementCompleteOverlay.classList.add("none");
+      saveChallenges();
+      return;
+    };
+
+    elementParent.setAttribute("challengecomplete", "true");
+    elementCompleteOverlay.classList.remove("none");
+
+    saveChallenges();
   });
   challengeDiv.appendChild(challengeCompleteBtn);
+
+  challengeDiv.setAttribute("challengecomplete", "false");
 
 
   const challengeCompleteOverlay = document.createElement("div");
   challengeCompleteOverlay.classList.add("challenges-created--completed", "none");
+  challengeCompleteOverlay.textContent = "CHALLENGE COMPLETED";
   challengeDiv.appendChild(challengeCompleteOverlay);
 
 
@@ -278,20 +295,25 @@ const createChallengeCard = challenge => {
 
 
   challengeDiv.appendChild(challengeText);
-  if (challengeTypeSelected === 1) createdChallengesLegends.appendChild(challengeDiv);
-  if (challengeTypeSelected === 2) createdChallengesWeapons.appendChild(challengeDiv);
+  if (challengeTypeSelected === 1) return createdChallengesLegends.appendChild(challengeDiv);
+  if (challengeTypeSelected === 2) return createdChallengesWeapons.appendChild(challengeDiv);
 };
 
 const saveChallenges = () => {
   const getChallengesText = document.getElementsByClassName("challenges-created-text");
   const savedChallenges = [];
-  // console.log(getChallengesText);
+
+  const getChallengesCompleteState = document.getElementsByClassName("challenges-created");
+  const savedChallengesState = [];
 
   Array.from(getChallengesText).forEach(el => savedChallenges.push(el.innerText));
+  Array.from(getChallengesCompleteState).forEach(el => savedChallengesState.push(el.getAttribute("challengecomplete")));
 
   const challengesJSON = JSON.stringify(savedChallenges);
+  const challengesStateJSON = JSON.stringify(savedChallengesState);
 
   localStorage.setItem("apexChallengesJSON", challengesJSON);
+  localStorage.setItem("apexChallengesStateJSON", challengesStateJSON);
 };
 
 // This function handles if the "No Challenges" text will appear
@@ -313,25 +335,23 @@ const checkChallengesCreatedState = () => {
   }
 };
 
-// IIFE that will retrieve all the challenges previously created (if there's any)
+// IIFE that will retrieve all the challenges and it's state previously created (if there's any).
 (() => {
   const retrievedChallenges = JSON.parse(localStorage.getItem("apexChallengesJSON"));
+  const retrievedChallengesState = JSON.parse(localStorage.getItem("apexChallengesStateJSON"));
+
   if (!retrievedChallenges) return;
 
-  for (el of retrievedChallenges) {
+  retrievedChallenges.forEach((el, index) => {
     // If any string from weaponClasses Array is included in the Object of localStorage, return true and create the challenge based on the weapon types (challengeTypeSelected = 2)
-    // Weapons are used to "filter" here, cause there's less weapon types than Legends.
-    if (weaponClasses.some(weapon => el.includes(weapon))) {
-      challengeTypeSelected = 2;
-      createChallengeCard(el);
-    }
+    // Weapons are used to "filter" here, cause there's less weapon types than Legends, so it's easier.
+    weaponClasses.some(weapon => el.includes(weapon)) ? challengeTypeSelected = 2 : challengeTypeSelected = 1;
 
-    // Otherwise, will be a Legend Challenge.
-    else {
-      challengeTypeSelected = 1;
-      createChallengeCard(el);
-    }
-  }
+    const challengeCreated = createChallengeCard(el);
+    challengeCreated.setAttribute("challengecomplete", retrievedChallengesState[index]);
+
+    if (challengeCreated.getAttribute("challengecomplete") === "true") challengeCreated.children[1].classList.remove("none");
+  })
 })();
 
 /*

@@ -1,6 +1,7 @@
 @use '../util' as u;
 
 .header-button {
+  display: block;
   position: absolute;
 
   top: 20px;
@@ -14,6 +15,51 @@
   @include u.forDesktop {
     display: none;
   }
+
+  .header-button-container {
+    @include u.flexCenter--column;
+    gap: 5px;
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+
+    .header-button-bar {
+      width: 33px;
+      height: 4px;
+      border-radius: 3px;
+      background: red;
+    }
+
+    .top-bar, .bottom-bar {
+      transition: all ease-in-out .3s;
+    }
+
+    .middle-bar {
+      transition: all ease-in-out .3s;
+    }
+
+    .top-bar.bar-animation {
+      position: absolute;
+      top: 50%;
+      transform: rotate(135deg);
+    }
+
+    .middle-bar.bar-animation {
+      position: absolute;
+      transform: scale(0);
+      transform-origin: bottom right;
+      opacity: 0;
+    }
+
+    .bottom-bar.bar-animation {
+      position: absolute;
+      top: 50%;
+      transform: rotate(-135deg);
+    }
+  }
+
+
 }
 
 header {
@@ -60,10 +106,10 @@ header {
           @include u.flexCenter;
           margin: 0 auto;
           // background: linear-gradient(0deg, var(--button-main-color) 70%, var(--button-secondary-color) 100%);
-          background: linear-gradient(0deg, 
-          var(--button-main-color) 10%, 
-          var(--button-main-color--lowOpacity) 70%, 
-          var(--button-secondary-color) 100%);
+          background: linear-gradient(0deg,
+              var(--button-main-color) 10%,
+              var(--button-main-color--lowOpacity) 70%,
+              var(--button-secondary-color) 100%);
 
           border-bottom: 5px solid;
           border-image-slice: 1;
@@ -75,7 +121,7 @@ header {
 
           min-height: 50px;
           min-width: 300px;
-          
+
           color: white;
           text-decoration: none;
         }

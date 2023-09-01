@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="./src/css/main.css">
   <script defer src="./src/js/index.js"></script>
   <link rel="shortcut icon" href="./assets/images/icons/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -305,7 +304,13 @@
 
   <header>
 
-    <button class="header-button">Abrir Menu</button>
+    <button class="header-button">
+      <div class="header-button-container">
+        <span class="header-button-bar top-bar"></span>
+        <span class="header-button-bar middle-bar"></span>
+        <span class="header-button-bar bottom-bar"></span>
+      </div>
+    </button>
 
     <nav class="nav">
 
@@ -326,6 +331,12 @@
   </header>
 
   <main>
+
+    <div class="challenges-toolbox">
+      <button class="challenges-delete-completed">
+        <img src="./assets/images/icons/trashcan.svg" alt="Trashcan">
+      </button>
+    </div>
 
     <div class="challenges-wrapper">
 

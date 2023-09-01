@@ -13,7 +13,6 @@ const createdChallengesWeapons = document.querySelector(".challenges--weapons");
 const challengePreview = document.querySelector(".challenge-preview");
 const challengePreviewText = document.querySelector(".challenge-preview-text");
 const challengesCreated = document.getElementsByClassName("challenges-created");
-const challengeDeleteBtnCollection = document.getElementsByClassName("challenges-created-delete");
 
 // Inputs
 const challengeTypeInput = document.querySelectorAll(".challenge-types input");
@@ -26,12 +25,17 @@ const blurOverlay = document.querySelector(".blur-overlay");
 const confirmationOverlay = document.querySelector(".confirmation-overlay");
 const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
 const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
+const challengeDeleteCompletedBtn = document.querySelector(".challenges-delete-completed");
 const nav = document.querySelector(".nav");
 const headerNavButton = document.querySelector(".header-button");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
 const createChallengeTextLink = document.querySelector(".create-challenge-link");
 const createChallengeBackBtn = document.querySelector(".create-challenge-back-btn");
 const submit = document.querySelector(".pick-challenge-submit");
+// These are the bars from the Navigation Button (some transitions will be applied on them)
+const topBar = document.querySelector(".top-bar");
+const midBar = document.querySelector(".middle-bar");
+const bottomBar = document.querySelector(".bottom-bar");
 
 let selectedItemsArray = [];
 let selectedItem;
@@ -42,13 +46,16 @@ let challengeSubtypeVar;
 let isNavOpen;
 
 // Arrays
+// This array handle elements of the challenge creation visibility.
+const createChallengeComponents = [overlay, challengePreview, blurOverlay]; 
 // This array handle all the elements that somehow impact visibility (IE. Types, Subtypes, Grid to pick Weapons and Legends, etc.)
 const divsArr = [challengeSubtypesWrapper, challengeSubtypeLegends, challengeSubtypeWeapons, legendsPick, weaponsPick];
 // This array handle all the elements that have checkboxes.
 const checkboxesArr = [challengeTypeInput, challengeSubtypeInput, legendsInput, weaponsInput];
 // This array handle the formatting of Weapon Classes names.
 const weaponClasses = ["Assault Rifles", "Light Machine Guns", "Marksman", "Pistols", "Shotguns", "Sub Machine Guns", "Sniper Rifles", "Red Tier Weapons"];
-
+// This array handle the bars from the navigation menu.
+const navButtonBars = [topBar, midBar, bottomBar];
 
 
 // Along the code, some conditionals will refer as type 1 and 2.
@@ -56,12 +63,14 @@ const weaponClasses = ["Assault Rifles", "Light Machine Guns", "Marksman", "Pist
 
 headerNavButton.addEventListener("click", () => {
   if (isNavOpen) {
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
     nav.classList.remove("nav--opened");
     isNavOpen = false;
     bodyElement.classList.remove("no-scroll");
     return;
   }
 
+  navButtonBars.forEach(el => el.classList.add("bar-animation"));
   nav.classList.add("nav--opened");
   isNavOpen = true;
   bodyElement.classList.add("no-scroll");
@@ -73,7 +82,7 @@ navChallengesLink.addEventListener("click", () => {
   overlay.classList.toggle("none");
   submit.classList.remove("block");
   document.body.classList.remove("no-scroll");
-  blurOverlay.classList.remove("none");
+  removeNoneClass(blurOverlay);
   isNavOpen = false;
 });
 // Same as the above, but instead of the element being clicked be the link on the nav, it's a button that appears when there's no challenge created. It's not a good practice to "appoint problems" to the users without giving them a solution.
@@ -81,20 +90,35 @@ createChallengeTextLink.addEventListener("click", () => {
   overlay.classList.toggle("none");
   submit.classList.remove("block");
   document.body.classList.remove("no-scroll");
-  blurOverlay.classList.remove("none");
+  removeNoneClass(blurOverlay);
 });
 
 createChallengeBackBtn.addEventListener("click", () => {
   selectedItemsArray = [];
   selectedItem = null;
 
+  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+
   uncheckAll(checkboxesArr);
   resetContentVisibility(divsArr);
-  overlay.classList.add("none");
-  challengePreview.classList.add("none");
-  blurOverlay.classList.add("none");
-
+  addMultipleNoneClass(createChallengeComponents);
   checkChallengesCreatedState();
+});
+
+challengeDeleteCompletedBtn.addEventListener("click", () => {
+
+  Array.from(challengesCreated).forEach(el => {
+
+    if (el.getAttribute("challengecomplete") === "true") {
+      el.remove();
+      saveChallenges();
+      checkChallengesCreatedState();
+    } else {
+      return;
+    }
+    
+  });
+
 });
 
 const toggleBorder = el => el.classList.toggle("--borderGreen");
@@ -106,6 +130,8 @@ const resetBorder = arr => {
 const showContent = content => content.classList.add("flex");
 
 const addNoneClass = content => content.classList.add("none");
+const addMultipleNoneClass = arr => arr.forEach(el => el.classList.add("none"));
+const removeNoneClass = content => content.classList.remove("none");
 
 const resetContentVisibility = arr => {
   for (el of arr) el.classList.remove("flex");
@@ -255,13 +281,13 @@ const createChallengeCard = challenge => {
 
     if (elementParent.getAttribute("challengecomplete") === "true") {
       elementParent.setAttribute("challengecomplete", "false");
-      elementCompleteOverlay.classList.add("none");
+      addNoneClass(elementCompleteOverlay);
       saveChallenges();
       return;
     };
 
     elementParent.setAttribute("challengecomplete", "true");
-    elementCompleteOverlay.classList.remove("none");
+    removeNoneClass(elementCompleteOverlay);
 
     saveChallenges();
   });
@@ -280,16 +306,16 @@ const createChallengeCard = challenge => {
   challengeDeleteBtn.classList.add("challenges-created-delete");
   challengeDeleteBtn.addEventListener("click", el => {
     const element = el.target.parentNode;
-    confirmationOverlay.classList.remove("none");
+    removeNoneClass(confirmationOverlay);
 
     confirmationYesBtn.onclick = () => {
       element.remove();
       saveChallenges();
       checkChallengesCreatedState();
-      confirmationOverlay.classList.add("none");
+      addNoneClass(confirmationOverlay);
     }
 
-    confirmationNoBtn.onclick = () => confirmationOverlay.classList.add("none");
+    confirmationNoBtn.onclick = () => addNoneClass(confirmationOverlay);
   });
   challengeDiv.appendChild(challengeDeleteBtn);
 
@@ -323,15 +349,15 @@ const checkChallengesCreatedState = () => {
 
   if (challengesCreated.length === 0) {
     createdChallengesWrapper.style.justifyContent = "center";
-    challengeCategories.forEach(el => el.classList.add("none"));
-    challengesCreatedNone.classList.remove("none");
+    challengeCategories.forEach(el => addNoneClass(el));
+    removeNoneClass(challengesCreatedNone);
   } else {
     createdChallengesWrapper.style.justifyContent = "flex-start";
     // If the second child from the element is undefined, that means that it doesn't exist, so we assume that there's no Challenge Created in this category, then it's safe to hide the Title until the user create a challenge.
     challengeCategories.forEach(el =>
-      el.children[1] === undefined ? el.classList.add("none") : el.classList.remove("none")
+      el.children[1] === undefined ? addNoneClass(el) : removeNoneClass(el)
     );
-    challengesCreatedNone.classList.add("none");
+    addNoneClass(challengesCreatedNone);
   }
 };
 
@@ -350,7 +376,7 @@ const checkChallengesCreatedState = () => {
     const challengeCreated = createChallengeCard(el);
     challengeCreated.setAttribute("challengecomplete", retrievedChallengesState[index]);
 
-    if (challengeCreated.getAttribute("challengecomplete") === "true") challengeCreated.children[1].classList.remove("none");
+    if (challengeCreated.getAttribute("challengecomplete") === "true") removeNoneClass(challengeCreated.children[1]);
   })
 })();
 
@@ -398,8 +424,7 @@ challengeSubtypeInput.forEach(el => el.addEventListener("change", el => {
   console.log(subtypeInput)
   challengeSubtypeVar = subtypeInput;
 
-  challengePreview.classList.remove("none");
-
+  removeNoneClass(challengePreview);
   resetBorder(challengeSubtypeInput);
   toggleBorder(borderElement);
 
@@ -430,9 +455,9 @@ submit.addEventListener("click", () => {
   // Resets after the user creates the challenge
   uncheckAll(checkboxesArr);
   resetContentVisibility(divsArr);
-  overlay.classList.add("none");
-  challengePreview.classList.add("none");
-  blurOverlay.classList.add("none");
+  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+
+  createChallengeComponents.forEach(el => addNoneClass(el));
 
   checkChallengesCreatedState();
 });

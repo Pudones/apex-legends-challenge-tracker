@@ -1,7 +1,7 @@
 # Apex Legends Challenge Tracker
 
 ## What is this?
-This is a companion for Apex Legends game that will help you manage some of your challenges and in the future, will provide you the "Optimal Way" of doing your challenges based on your inputs.
+This is a companion for Apex Legends game that will help you manage some of your challenges and provide you the "Optimal Way" of doing your challenges based on your inputs.
 
 ## Kewl. How can I access it?
 [Click Here](https://pudones.github.io/apex-legends-challenge-tracker/)

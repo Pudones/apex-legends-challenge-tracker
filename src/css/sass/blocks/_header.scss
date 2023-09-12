@@ -78,6 +78,7 @@ header {
     width: 100%;
     background: rgb(36, 68, 40);
     z-index: 3;
+    transition: .5s;
 
     @include u.forDesktop {
       position: initial;

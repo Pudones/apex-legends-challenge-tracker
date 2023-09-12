@@ -1,3 +1,5 @@
+@use '../util' as u;
+
 .confirmation-overlay {
   display: flex;
   flex-direction: column;
@@ -28,9 +30,72 @@
   }
 }
 
+
+
 .blur-overlay {
   position: absolute;
   inset: 0;
   backdrop-filter: blur(70px);
   z-index: 5;
+}
+
+
+
+.optimize-challenge-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  visibility: hidden;
+
+  .optimize-challenge-back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .optimize-challenge-overlay-container {
+    @include u.flexCenter--column;
+    max-width: 900px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(35, 63, 35);
+    padding: 25px;
+  }
+
+  .optimize-challenge-banner {
+    max-width: 250px;
+    height: 250px;
+  }
+
+  .optimize-challenge-title {
+    color: white;
+  }
+}
+.optimize-challenge-overlay--active {
+  visibility: visible;
+}
+
+
+
+.warning-window {
+  position: absolute;
+  top: -100%;
+  z-index: 5;
+
+  background: rgb(70, 12, 12);
+
+  width: 100%;
+  padding: 15px;
+
+  font-size: 1.3rem;
+
+  transition: all .5s ease-in-out;
+}
+.warning-window--active {
+  top: 0;
 }

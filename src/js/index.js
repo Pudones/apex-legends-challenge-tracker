@@ -1,6 +1,6 @@
 // Blocks
 const bodyElement = document.body;
-const overlay = document.querySelector(".create-challenge-overlay");
+const createChallengeOverlay = document.querySelector(".create-challenge-overlay");
 const challengeSubtypesWrapper = document.querySelector(".pick-challenge-subtype");
 const challengeSubtypesNode = document.querySelectorAll(".challenge-subtypes");
 const challengeSubtypeLegends = document.querySelector(".challenge-subtypes--legends");
@@ -13,6 +13,8 @@ const createdChallengesWeapons = document.querySelector(".challenges--weapons");
 const challengePreview = document.querySelector(".challenge-preview");
 const challengePreviewText = document.querySelector(".challenge-preview-text");
 const challengesCreated = document.getElementsByClassName("challenges-created");
+const optimizeOverlay = document.querySelector(".optimize-challenge-overlay");
+const warningWindow = document.querySelector(".warning-window");
 
 // Inputs
 const challengeTypeInput = document.querySelectorAll(".challenge-types input");
@@ -21,33 +23,41 @@ const legendsInput = document.querySelectorAll(".pick-challenge-legends input");
 const weaponsInput = document.querySelectorAll(".pick-challenge-weapons input");
 
 // Elements, Validations, Control Variables and other stuff
+// These are the bars from the Navigation Button (some transitions will be applied on them)
+const topBar = document.querySelector(".top-bar");
+const midBar = document.querySelector(".middle-bar");
+const bottomBar = document.querySelector(".bottom-bar");
+
 const blurOverlay = document.querySelector(".blur-overlay");
 const confirmationOverlay = document.querySelector(".confirmation-overlay");
+
 const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
 const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
 const challengeDeleteCompletedBtn = document.querySelector(".challenges-delete-completed");
 const nav = document.querySelector(".nav");
 const headerNavButton = document.querySelector(".header-button");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
+
+const navChallengesOptimize = document.querySelector("#nav-link--optimize");
+const optimizeChallengeBackBtn = document.querySelector(".optimize-challenge-back-btn");
+const warningTextBottom = document.querySelector(".warning-text-bottom");
+const textInputOfOptimizedChallenge = document.querySelector(".optimize-challenge-title");
+const optimizeBanner = document.querySelector(".optimize-challenge-banner");
+
 const createChallengeTextLink = document.querySelector(".create-challenge-link");
 const createChallengeBackBtn = document.querySelector(".create-challenge-back-btn");
+
 const submit = document.querySelector(".pick-challenge-submit");
-// These are the bars from the Navigation Button (some transitions will be applied on them)
-const topBar = document.querySelector(".top-bar");
-const midBar = document.querySelector(".middle-bar");
-const bottomBar = document.querySelector(".bottom-bar");
 
 let selectedItemsArray = [];
 let selectedItem;
-
 let challengeTypeSelected;
 let challengeSubtypeVar;
-
 let isNavOpen;
 
 // Arrays
 // This array handle elements of the challenge creation visibility.
-const createChallengeComponents = [overlay, challengePreview, blurOverlay]; 
+const createChallengeComponents = [createChallengeOverlay, challengePreview, blurOverlay];
 // This array handle all the elements that somehow impact visibility (IE. Types, Subtypes, Grid to pick Weapons and Legends, etc.)
 const divsArr = [challengeSubtypesWrapper, challengeSubtypeLegends, challengeSubtypeWeapons, legendsPick, weaponsPick];
 // This array handle all the elements that have checkboxes.
@@ -56,7 +66,33 @@ const checkboxesArr = [challengeTypeInput, challengeSubtypeInput, legendsInput, 
 const weaponClasses = ["Assault Rifles", "Light Machine Guns", "Marksman", "Pistols", "Shotguns", "Sub Machine Guns", "Sniper Rifles", "Red Tier Weapons"];
 // This array handle the bars from the navigation menu.
 const navButtonBars = [topBar, midBar, bottomBar];
-
+// This array handle the image sources from Legends.
+const legendsImages = {
+  ash: './assets/images/legends/ash.png',
+  ballistic: './assets/images/legends/ballistic.png',
+  bangalore: './assets/images/legends/bangalore.png',
+  bloodhound: './assets/images/legends/bloodhound.png',
+  catalyst: './assets/images/legends/catalyst.png',
+  caustic: './assets/images/legends/caustic.png',
+  crypto: './assets/images/legends/crypto.png',
+  fuse: './assets/images/legends/fuse.png',
+  gibraltar: './assets/images/legends/gibraltar.png',
+  horizon: './assets/images/legends/horizon.png',
+  lifeline: './assets/images/legends/lifeline.png',
+  loba: './assets/images/legends/loba.png',
+  maggie: './assets/images/legends/maggie.png',
+  mirage: './assets/images/legends/mirage.png',
+  newcastle: './assets/images/legends/newcastle.png',
+  octane: './assets/images/legends/octane.png',
+  pathfinder: './assets/images/legends/pathfinder.png',
+  rampart: './assets/images/legends/rampart.png',
+  revenant: './assets/images/legends/revenant.png',
+  seer: './assets/images/legends/seer.png',
+  valkyrie: './assets/images/legends/valkyrie.png',
+  vantage: './assets/images/legends/vantage.png',
+  wattson: './assets/images/legends/wattson.png',
+  wraith: './assets/images/legends/wraith.png'
+}
 
 // Along the code, some conditionals will refer as type 1 and 2.
 // The numbers mean: 1. Legends - 2. Weapons
@@ -79,7 +115,7 @@ headerNavButton.addEventListener("click", () => {
 // Handler for the click on the navbar that opens the challenge creation.
 navChallengesLink.addEventListener("click", () => {
   nav.classList.toggle("nav--opened");
-  overlay.classList.toggle("none");
+  createChallengeOverlay.classList.toggle("none");
   submit.classList.remove("block");
   document.body.classList.remove("no-scroll");
   removeNoneClass(blurOverlay);
@@ -87,7 +123,7 @@ navChallengesLink.addEventListener("click", () => {
 });
 // Same as the above, but instead of the element being clicked be the link on the nav, it's a button that appears when there's no challenge created. It's not a good practice to "appoint problems" to the users without giving them a solution.
 createChallengeTextLink.addEventListener("click", () => {
-  overlay.classList.toggle("none");
+  createChallengeOverlay.classList.toggle("none");
   submit.classList.remove("block");
   document.body.classList.remove("no-scroll");
   removeNoneClass(blurOverlay);
@@ -116,9 +152,89 @@ challengeDeleteCompletedBtn.addEventListener("click", () => {
     } else {
       return;
     }
-    
+
   });
 
+});
+
+const optimizeOverlayWindow = document.querySelector(".optimize-challenge-overlay-container");
+
+navChallengesOptimize.addEventListener("click", () => {
+  optimizeOverlay.classList.add("optimize-challenge-overlay--active");
+
+  const eligibleChallenges = [];
+  const challengeOcurrenceArray = [];
+
+  for (el of challengesCreated) {
+    if (el.getAttribute("challengecomplete") === "false") eligibleChallenges.push(el);
+  }
+
+  if (eligibleChallenges.length < 2) {
+    nav.classList.toggle("nav--opened");
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+    isNavOpen = false;
+
+    addNoneClass(blurOverlay);
+    addNoneClass(optimizeOverlay);
+
+    if (eligibleChallenges.length === 0) warningTextBottom.textContent = "(There's no challenges)";
+    if (eligibleChallenges.length === 1) warningTextBottom.textContent = "(Only one challenge exists)";
+    
+    warningWindow.classList.add("warning-window--active");
+
+    setTimeout(() => {
+      warningWindow.classList.remove("warning-window--active");
+    }, 4000);
+
+    return;
+  }
+
+  nav.classList.toggle("nav--opened");
+  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+  isNavOpen = false;
+  removeNoneClass(blurOverlay);
+  removeNoneClass(optimizeOverlay);
+
+  for (el of eligibleChallenges) {
+    let challengeText = el.children[3].textContent;
+
+    challengeText = challengeText.replace(/[^a-zA-Z]+/g, ' ').split(" ");
+    challengeText.forEach(el => {
+      if (el === "Play" || el === "Damage" || el === "with" || el === '') return;
+      challengeOcurrenceArray.push(el);
+    });
+  };
+
+  // This variable holds the value of the return of the function below, either the element that appears more times or "false" if there's only ONE challenge created (becoming impossible to optimize)
+  let challengeOcurrenceElement = checkBiggestOccurrence(challengeOcurrenceArray, challengeOcurrenceArray.length);
+
+  if (challengeOcurrenceElement === false) {
+    addNoneClass(blurOverlay);
+    addNoneClass(optimizeOverlay);
+    warningWindow.classList.add("warning-window--active");
+    warningTextBottom.textContent = "(Maybe all challenges are different?)";
+
+    setTimeout(() => {
+      warningWindow.classList.remove("warning-window--active");
+    }, 3800);
+
+    return;
+  }
+
+  optimizeBanner.src = legendsImages[`${challengeOcurrenceElement.toLowerCase()}`];
+
+  if (challengeOcurrenceElement === "maggie") {
+    textInputOfOptimizedChallenge.textContent = "Mad Maggie";
+    return;
+  }
+
+  textInputOfOptimizedChallenge.textContent = challengeOcurrenceElement;
+});
+
+optimizeChallengeBackBtn.addEventListener("click", () => {
+  addNoneClass(blurOverlay);
+  bodyElement.classList.remove("no-scroll");
+  optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
 });
 
 const toggleBorder = el => el.classList.toggle("--borderGreen");
@@ -144,6 +260,29 @@ const uncheckAll = arr => {
       el.checked = false;
     }
   }
+};
+
+const checkBiggestOccurrence = (arr, arrLength) => {
+  let maxCount = 0;
+  let elementMostFrequent;
+
+  for (let i = 0; i < arrLength; i++) {
+    let count = 0;
+
+    for (let j = 0; j < arrLength; j++) {
+      if (arr[i] === arr[j]) count++;
+    }
+
+    if (count > maxCount) {
+      maxCount = count;
+      elementMostFrequent = arr[i];
+    }
+  }
+
+  if (maxCount === 1) return false;
+
+  // Otherwise, return the most frequent element in the array.
+  return elementMostFrequent;
 };
 
 const formatSubtypeText = sub => {

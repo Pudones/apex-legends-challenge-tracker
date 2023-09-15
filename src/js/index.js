@@ -179,6 +179,11 @@ challengeDeleteAllBtn.addEventListener("click", () => {
 });
 
 challengeDeleteCompletedBtn.addEventListener("click", () => {
+  if (challengesCreated.length < 1) {
+    challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+    showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
+    return;
+  }
 
   Array.from(challengesCreated).forEach(el => {
     if (el.getAttribute("challengecomplete") === "true") {
@@ -186,6 +191,7 @@ challengeDeleteCompletedBtn.addEventListener("click", () => {
       saveChallenges();
       checkChallengesCreatedState();
     } else {
+      showWarningWindow("Can't delete challenges.", "(All challenges are incomplete.)");
       return;
     }
   });
@@ -225,7 +231,7 @@ navChallengesOptimize.addEventListener("click", () => {
 
     challengeText = challengeText.replace(/[^a-zA-Z]+/g, ' ').split(" ");
     challengeText.forEach(el => {
-      if (el === "Play" || el === "Damage" || el === "with" || el === '') return;
+      if (el === "Play" || el === "Damage" || el === "Kills" || el === "Knockdowns" || el === "with" || el === '') return;
       challengeOcurrenceArray.push(el);
     });
   }

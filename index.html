@@ -17,9 +17,7 @@
 
   <div class="confirmation-overlay none">
     <div class="confirmation-window">
-      <h2>Do you really want to delete this challenge?</h2>
-      <h2 class="none">Do you really want to delete all completed challenges?</h2>
-
+      <h2 class="confirmation-action"></h2>
       <button class="confirmation-btn confirmation-btn--yes">Yes</button>
       <button class="confirmation-btn confirmation-btn--no">No</button>
     </div>
@@ -309,14 +307,52 @@
     </button>
 
     <div class="optimize-challenge-overlay-container">
+
       <h2 class="text-center">Based on your challenges, the optimized way is to play with:</h2>
+
       <img class="optimize-challenge-banner" src="./assets/images/misc/404.png" alt="Optimized Challenge Banner">
-      <h1 class="optimize-challenge-title text-center">PLACEHOLDER TEXT</h1>
+
+      <h2 class="optimize-challenge-title text-center">PLACEHOLDER TEXT</h2>
+
+      <div class="separator"></div>
+
+      <div class="optimize-challenge-display-challenges">
+        <p class="text-center">Challenges:</p>
+      </div>
+
     </div>
 
   </div>
 
   <header>
+
+    <button class="challenges-toolbox">
+      <img src="./assets/images/icons/toolbox.svg" alt="Toolbox Icon">
+    </button>
+
+    <div class="challenges-toolbox-wrapper">
+
+      <div class="toolbox-item">
+
+        <button class="challenges-delete-completed">
+          <img src="./assets/images/icons/trashcan.svg" alt="Trashcan">
+        </button>
+
+        <p>Delete all completed</p>
+
+      </div>
+
+      <div class="toolbox-item">
+
+        <button class="challenges-delete-all">
+          <img src="./assets/images/icons/trashcan.svg" alt="Trashcan">
+        </button>
+
+        <p>Delete <strong>ALL</strong> challenges</p>
+
+      </div>
+
+    </div>
 
     <button class="header-button">
       <div class="header-button-container">
@@ -342,15 +378,10 @@
         </li>
       </ul>
     </nav>
+
   </header>
 
   <main>
-
-    <div class="challenges-toolbox">
-      <button class="challenges-delete-completed">
-        <img src="./assets/images/icons/trashcan.svg" alt="Trashcan">
-      </button>
-    </div>
 
     <div class="challenges-wrapper">
 

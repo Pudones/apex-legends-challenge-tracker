@@ -1,5 +1,7 @@
 // Blocks
 const bodyElement = document.body;
+const nav = document.querySelector(".nav");
+const challengeToolboxWrapper = document.querySelector(".challenges-toolbox-wrapper");
 const createChallengeOverlay = document.querySelector(".create-challenge-overlay");
 const challengeSubtypesWrapper = document.querySelector(".pick-challenge-subtype");
 const challengeSubtypesNode = document.querySelectorAll(".challenge-subtypes");
@@ -15,6 +17,7 @@ const challengePreviewText = document.querySelector(".challenge-preview-text");
 const challengesCreated = document.getElementsByClassName("challenges-created");
 const optimizeOverlay = document.querySelector(".optimize-challenge-overlay");
 const warningWindow = document.querySelector(".warning-window");
+const optimizeOverlayWindow = document.querySelector(".optimize-challenge-overlay-container");
 
 // Inputs
 const challengeTypeInput = document.querySelectorAll(".challenge-types input");
@@ -34,12 +37,14 @@ const confirmationOverlay = document.querySelector(".confirmation-overlay");
 const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
 const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
 const challengeDeleteCompletedBtn = document.querySelector(".challenges-delete-completed");
-const nav = document.querySelector(".nav");
 const headerNavButton = document.querySelector(".header-button");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
+const challengeToolboxBtn = document.querySelector(".challenges-toolbox");
+const challengeDeleteAllBtn = document.querySelector(".challenges-delete-all");
 
 const navChallengesOptimize = document.querySelector("#nav-link--optimize");
 const optimizeChallengeBackBtn = document.querySelector(".optimize-challenge-back-btn");
+const warningTextTop = document.querySelector(".warning-text-top");
 const warningTextBottom = document.querySelector(".warning-text-bottom");
 const textInputOfOptimizedChallenge = document.querySelector(".optimize-challenge-title");
 const optimizeBanner = document.querySelector(".optimize-challenge-banner");
@@ -141,10 +146,41 @@ createChallengeBackBtn.addEventListener("click", () => {
   checkChallengesCreatedState();
 });
 
+challengeToolboxBtn.addEventListener("click", () => challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active"));
+
+const confirmationActionText = document.querySelector(".confirmation-action");
+
+challengeDeleteAllBtn.addEventListener("click", () => {
+
+  if (challengesCreated.length < 1) {
+    challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+    showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
+    return;
+  }
+
+  removeNoneClass(confirmationOverlay);
+  confirmationActionText.textContent = "Do you really want to delete ALL challenges?";
+
+  confirmationYesBtn.onclick = () => {
+    Array.from(challengesCreated).forEach(el => {
+      el.remove();
+      saveChallenges();
+      checkChallengesCreatedState();
+      addNoneClass(confirmationOverlay);
+    });
+  }
+
+  confirmationNoBtn.onclick = () => {
+    addNoneClass(confirmationOverlay);
+  }
+
+  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+
+});
+
 challengeDeleteCompletedBtn.addEventListener("click", () => {
 
   Array.from(challengesCreated).forEach(el => {
-
     if (el.getAttribute("challengecomplete") === "true") {
       el.remove();
       saveChallenges();
@@ -152,39 +188,27 @@ challengeDeleteCompletedBtn.addEventListener("click", () => {
     } else {
       return;
     }
-
   });
+
+  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
 
 });
 
-const optimizeOverlayWindow = document.querySelector(".optimize-challenge-overlay-container");
-
 navChallengesOptimize.addEventListener("click", () => {
-  optimizeOverlay.classList.add("optimize-challenge-overlay--active");
-
   const eligibleChallenges = [];
   const challengeOcurrenceArray = [];
 
-  for (el of challengesCreated) {
-    if (el.getAttribute("challengecomplete") === "false") eligibleChallenges.push(el);
-  }
+  for (el of challengesCreated) if (el.getAttribute("challengecomplete") === "false") eligibleChallenges.push(el);
 
+
+  // If there's ONE or ZERO challenges:
   if (eligibleChallenges.length < 2) {
     nav.classList.toggle("nav--opened");
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
     isNavOpen = false;
 
-    addNoneClass(blurOverlay);
-    addNoneClass(optimizeOverlay);
-
-    if (eligibleChallenges.length === 0) warningTextBottom.textContent = "(There's no challenges)";
-    if (eligibleChallenges.length === 1) warningTextBottom.textContent = "(Only one challenge exists)";
-    
-    warningWindow.classList.add("warning-window--active");
-
-    setTimeout(() => {
-      warningWindow.classList.remove("warning-window--active");
-    }, 4000);
+    if (eligibleChallenges.length === 0) showWarningWindow("Can't optimize challenges.", "(There's no challenges to optimize.)");
+    if (eligibleChallenges.length === 1) showWarningWindow("Can't optimize challenges.", "(Only one challenge exists.)");
 
     return;
   }
@@ -192,8 +216,9 @@ navChallengesOptimize.addEventListener("click", () => {
   nav.classList.toggle("nav--opened");
   navButtonBars.forEach(el => el.classList.remove("bar-animation"));
   isNavOpen = false;
+
   removeNoneClass(blurOverlay);
-  removeNoneClass(optimizeOverlay);
+  optimizeOverlay.classList.toggle("optimize-challenge-overlay--active");
 
   for (el of eligibleChallenges) {
     let challengeText = el.children[3].textContent;
@@ -203,23 +228,29 @@ navChallengesOptimize.addEventListener("click", () => {
       if (el === "Play" || el === "Damage" || el === "with" || el === '') return;
       challengeOcurrenceArray.push(el);
     });
-  };
+  }
 
   // This variable holds the value of the return of the function below, either the element that appears more times or "false" if there's only ONE challenge created (becoming impossible to optimize)
   let challengeOcurrenceElement = checkBiggestOccurrence(challengeOcurrenceArray, challengeOcurrenceArray.length);
 
+  // If all challenges are different:
   if (challengeOcurrenceElement === false) {
     addNoneClass(blurOverlay);
-    addNoneClass(optimizeOverlay);
-    warningWindow.classList.add("warning-window--active");
-    warningTextBottom.textContent = "(Maybe all challenges are different?)";
+    optimizeOverlay.classList.toggle("optimize-challenge-overlay--active");
 
-    setTimeout(() => {
-      warningWindow.classList.remove("warning-window--active");
-    }, 3800);
-
+    showWarningWindow("Can't optimize challenges.", "(Maybe all challenges are different?)");
     return;
   }
+
+  // This will reset the challenge cards from the optimizer if there's any.
+  const challengeCardArr = document.querySelectorAll(".optimize-challenge-card");
+  challengeCardArr.forEach(el => el.remove());
+
+  eligibleChallenges.forEach(el => {
+    const textOfChallenge = el.children[3].textContent;
+
+    if (textOfChallenge.includes(challengeOcurrenceElement)) createChallengeCardOptimizer(textOfChallenge);
+  });
 
   optimizeBanner.src = legendsImages[`${challengeOcurrenceElement.toLowerCase()}`];
 
@@ -284,6 +315,17 @@ const checkBiggestOccurrence = (arr, arrLength) => {
   // Otherwise, return the most frequent element in the array.
   return elementMostFrequent;
 };
+
+const showWarningWindow = (topText, bottomText) => {
+  // topText is the warning and bottomText is some explanation about the warning.
+  warningWindow.classList.add("warning-window--active");
+  warningTextTop.textContent = topText;
+  warningTextBottom.textContent = bottomText;
+
+  setTimeout(() => {
+    warningWindow.classList.remove("warning-window--active");
+  }, 3800);
+}
 
 const formatSubtypeText = sub => {
   const subtypes = ["Play", "Damage", "Kills", "Knockdowns"];
@@ -447,14 +489,22 @@ const createChallengeCard = challenge => {
     const element = el.target.parentNode;
     removeNoneClass(confirmationOverlay);
 
+    confirmationActionText.textContent = "Do you really want to delete this challenge?";
+
+    bodyElement.classList.add("no-scroll");
+
     confirmationYesBtn.onclick = () => {
       element.remove();
       saveChallenges();
       checkChallengesCreatedState();
       addNoneClass(confirmationOverlay);
+      bodyElement.classList.remove("no-scroll");
     }
 
-    confirmationNoBtn.onclick = () => addNoneClass(confirmationOverlay);
+    confirmationNoBtn.onclick = () => {
+      addNoneClass(confirmationOverlay);
+      bodyElement.classList.remove("no-scroll");
+    }
   });
   challengeDiv.appendChild(challengeDeleteBtn);
 
@@ -462,6 +512,16 @@ const createChallengeCard = challenge => {
   challengeDiv.appendChild(challengeText);
   if (challengeTypeSelected === 1) return createdChallengesLegends.appendChild(challengeDiv);
   if (challengeTypeSelected === 2) return createdChallengesWeapons.appendChild(challengeDiv);
+};
+
+const createChallengeCardOptimizer = challenge => {
+  const challengeCardWrapper = document.querySelector(".optimize-challenge-display-challenges");
+
+  const challengeCardDiv = document.createElement("div");
+  challengeCardDiv.classList.add("optimize-challenge-card", "text-center");
+  challengeCardDiv.textContent = challenge;
+
+  challengeCardWrapper.appendChild(challengeCardDiv);
 };
 
 const saveChallenges = () => {
@@ -491,6 +551,11 @@ const checkChallengesCreatedState = () => {
     challengeCategories.forEach(el => addNoneClass(el));
     removeNoneClass(challengesCreatedNone);
   } else {
+    const challengeCreatedLastIndex = challengesCreated.length - 1;
+
+    Array.from(challengesCreated).forEach(el => el.classList.remove("mb10vh"));
+    challengesCreated[challengeCreatedLastIndex].classList.add("mb10vh");
+
     createdChallengesWrapper.style.justifyContent = "flex-start";
     // If the second child from the element is undefined, that means that it doesn't exist, so we assume that there's no Challenge Created in this category, then it's safe to hide the Title until the user create a challenge.
     challengeCategories.forEach(el =>

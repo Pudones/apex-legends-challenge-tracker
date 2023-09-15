@@ -5,10 +5,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   background: rgb(0, 0, 0, 0.6);
   inset: 0;
-  z-index: 2;
+  z-index: 4;
 
   .confirmation-window {
     padding: 20px;
@@ -42,7 +42,8 @@
 
 
 .optimize-challenge-overlay {
-  position: absolute;
+  position: fixed;
+  overflow-y: scroll;
   inset: 0;
   background: rgba(0, 0, 0, 0.1);
   z-index: 5;
@@ -57,14 +58,17 @@
   }
 
   .optimize-challenge-overlay-container {
-    @include u.flexCenter--column;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+
     max-width: 900px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgb(35, 63, 35);
-    padding: 25px;
+    margin: 0 auto;
+    margin-top: 100px;
+    min-height: 100%;
+    // background: rgb(35, 63, 35);
+
   }
 
   .optimize-challenge-banner {
@@ -73,8 +77,25 @@
   }
 
   .optimize-challenge-title {
+    font-size: 2rem;
     color: white;
   }
+
+  .optimize-challenge-display-challenges {
+    
+    p {
+      font-size: 1.6rem;
+    }
+
+    .optimize-challenge-card {
+      background: #3c3c67;
+      font-size: 1.5rem;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+  }
+
+
 }
 .optimize-challenge-overlay--active {
   visibility: visible;

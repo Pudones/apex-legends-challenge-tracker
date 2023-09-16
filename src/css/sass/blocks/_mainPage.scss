@@ -1,9 +1,5 @@
 @use '../util' as u;
 
-// main {
-//   margin-bottom: 10vh;
-// }
-
 .challenges-wrapper {
   display: flex;
   flex-direction: column;
@@ -16,7 +12,7 @@
   // background: rgba(42, 123, 48, 0.316); 
 
   @include u.forDesktop {
-    min-height: calc(100vh - 10vh);
+    min-height: calc(100vh - 85px);
   }
 
   .no-challenges-text {

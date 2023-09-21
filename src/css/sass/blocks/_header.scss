@@ -21,11 +21,11 @@ header {
     left: 20px;
     width: 50px;
     height: 50px;
-  
+
     @include u.forDesktop {
       display: none;
     }
-  
+
   }
 
   .challenges-toolbox-wrapper {
@@ -148,7 +148,8 @@ header {
     bottom: -1500%;
     height: 100vh;
     width: 100%;
-    background: rgb(36, 68, 40);
+    background: rgb(39, 47, 56, 0.1);
+    backdrop-filter: blur(55px);
     transition: .5s;
 
     @include u.forDesktop {
@@ -162,7 +163,7 @@ header {
       @include u.flexCenter--column;
       height: 100%;
       list-style: none;
-      gap: 5px;
+      gap: 15px;
 
       @include u.forDesktop {
         flex-direction: row;
@@ -171,29 +172,42 @@ header {
 
       .nav-li {
         color: white;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         font-family: "Apex", sans-serif;
-        letter-spacing: 2.5px;
+        font-weight: 400;
+        letter-spacing: 3.5px;
+        width: 80%;
+        height: 75px;
+
+        @include u.forDesktop {
+          width: 350px;
+        }
 
         .nav-link {
+          width: 100%;
+          height: 100%;
+
           @include u.flexCenter;
           margin: 0 auto;
-          // background: linear-gradient(0deg, var(--button-main-color) 70%, var(--button-secondary-color) 100%);
-          background: linear-gradient(0deg,
-              var(--button-main-color) 10%,
-              var(--button-main-color--lowOpacity) 70%,
-              var(--button-secondary-color) 100%);
+          background-color: rgb(36, 4, 4);
+
+          // background: linear-gradient(0deg,
+          //     var(--button-main-color) 10%,
+          //     var(--button-main-color--lowOpacity) 70%,
+          //     var(--button-secondary-color) 100%);
 
           border-bottom: 5px solid;
-          border-image-slice: 1;
-          border-image-source:
-            linear-gradient(to right,
-              var(--button-border-first-third-color),
-              var(--button-border-second-color),
-              var(--button-border-first-third-color));
+          border-color: orangered;
+          
+          // border-image-slice: 1;
+          // border-image-source:
+          //   linear-gradient(to right,
+          //     var(--button-border-first-third-color),
+          //     var(--button-border-second-color),
+          //     var(--button-border-first-third-color));
 
-          min-height: 50px;
-          min-width: 300px;
+          // min-height: 50px;
+          // min-width: 300px;
 
           color: white;
           text-decoration: none;

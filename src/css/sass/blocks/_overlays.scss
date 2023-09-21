@@ -32,11 +32,18 @@
 
 
 
+
 .blur-overlay {
   position: absolute;
-  inset: 0;
   backdrop-filter: blur(70px);
   z-index: 5;
+  transition: .3s;
+  top: -100%;
+  height: 100%;
+  width: 100%;
+}
+.blur-overlay--active {
+  inset: 0;
 }
 
 
@@ -44,10 +51,12 @@
 .optimize-challenge-overlay {
   position: fixed;
   overflow-y: scroll;
-  inset: 0;
+  top: -100%;
+  min-height: 100%;
+  width: 100%;
   background: rgba(0, 0, 0, 0.1);
   z-index: 5;
-  visibility: hidden;
+  transition: .5s ease-in-out;
 
   .optimize-challenge-back-btn {
     position: absolute;
@@ -62,44 +71,68 @@
     flex-direction: column;
     align-items: center;
     padding: 30px;
-
     max-width: 900px;
     margin: 0 auto;
     margin-top: 100px;
-    min-height: 100%;
-    // background: rgb(35, 63, 35);
+    // min-height: 100%;
 
-  }
-
-  .optimize-challenge-banner {
-    max-width: 250px;
-    height: 250px;
-  }
-
-  .optimize-challenge-title {
-    font-size: 2rem;
-    color: white;
-  }
-
-  .optimize-challenge-display-challenges {
-    
-    p {
-      font-size: 1.6rem;
+    .optimize-challenge-accordion-title {
+      font-size: 2rem;
+      background: none;
+      width: 100%;
+      padding: 10px;
+      color: white;
+      border: none;
+      font-family: "TTLakes", sans-serif;
     }
 
-    .optimize-challenge-card {
-      background: #3c3c67;
-      font-size: 1.5rem;
-      padding: 20px;
-      margin-bottom: 15px;
+    .optimize-challenge-option {
+      @include u.flexCenter--column;
+      overflow: hidden;
+      transition: max-height .5s ease-in-out;
+      max-width: 900px;
+      width: 100%;
+
+      .optimize-challenge-banner {
+        margin-block: 30px;
+        max-width: 250px;
+        height: 250px;
+      }
+
+      .optimize-challenge-title {
+        font-size: 2rem;
+        color: white;
+      }
+
+      .optimize-challenge-display-challenges {
+
+        p {
+          font-size: 1.6rem;
+        }
+
+        .optimize-challenge-card {
+          position: relative;
+          background: #3c3c67;
+          font-size: 1.5rem;
+          padding: 20px;
+          margin-bottom: 15px;
+
+          @include u.forDesktop {
+            padding: 25px;
+          }
+        }
+      }
     }
   }
-
-
 }
+
 .optimize-challenge-overlay--active {
-  visibility: visible;
+  inset: 0;
 }
+
+// .optimize-challenge-option--accordion.optimize-challenge-option--accordion.optimize-challenge-option--accordion {
+//   max-height: 2500px;
+// }
 
 
 
@@ -117,6 +150,7 @@
 
   transition: all .5s ease-in-out;
 }
+
 .warning-window--active {
   top: 0;
 }

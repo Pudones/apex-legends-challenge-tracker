@@ -50,42 +50,43 @@
 
   .challenges-created {
     position: relative;
-    background: rgba(60, 60, 103, 1);
+    background: rgba(60, 60, 103);
     font-size: 1.5rem;
     width: 100%;
     padding: 20px;
-
-    &--completed {
-      @include u.flexCenter;
-      position: absolute;
-      background: rgba(8, 8, 8, 0.7);
-      inset: 0;
-    }
-
-    &-complete-btn, &-delete {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border: none;
-      z-index: 1;
-    }
-
-    &-complete-btn {
-      left: 0;
-      bottom: 0;
-      background: green;
-    }
-
-    &-delete {
-      right: 0;
-      bottom: 0;
-      background: rgb(148, 27, 27);
-    }
   }
 
   .challenges--legends, .challenges--weapons {
     @include u.flexCenter--column;
     gap: 10px;
-    max-width: max-content;
+    width: 100%;
+    max-width: 700px;
   }
+}
+
+.challenges-created--completed {
+  @include u.flexCenter;
+  position: absolute;
+  background: rgba(8, 8, 8, 0.7);
+  inset: 0;
+}
+
+.challenges-created-complete-btn, .challenges-created-delete {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: none;
+  z-index: 1;
+}
+
+.challenges-created-complete-btn {
+  left: 0;
+  bottom: 0;
+  background: green;
+}
+
+.challenges-created-delete {
+  right: 0;
+  bottom: 0;
+  background: rgb(148, 27, 27);
 }

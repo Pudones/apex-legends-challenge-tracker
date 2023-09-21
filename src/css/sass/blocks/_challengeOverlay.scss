@@ -3,15 +3,23 @@
 .create-challenge-overlay {
   display: flex;
   flex-direction: column;
+  position: absolute;
 
+
+  top: -100%;
   background: rgba(95, 156, 177, 0.3);
 
-  position: fixed;
-  overflow-y: scroll;
-  inset: 0;
+
+  // background: red;
+  // top: 0;
+
+  min-width: 100%;
+  min-height: 100%;
 
   z-index: 6;
   padding: 15px;
+
+  transition: all .3s linear;
 
   .create-challenge-back-btn {
     position: fixed;
@@ -25,7 +33,8 @@
     cursor: pointer;
   }
 
-  .pick-challenge-type, .pick-challenge-subtype {
+  .pick-challenge-type,
+  .pick-challenge-subtype {
     @include u.flexCenter--column;
   }
 
@@ -91,7 +100,8 @@
       }
     }
 
-    .challenge-subtypes--legends, .challenge-subtypes--weapons {
+    .challenge-subtypes--legends,
+    .challenge-subtypes--weapons {
       display: none;
     }
 
@@ -116,6 +126,26 @@
     }
   }
 
+  .create-challenge-success {
+    @include u.flexCenter--column;
+    position: fixed;
+    inset: 0;
+    background: rgb(30, 87, 30);
+    font-size: 2.5rem;
+    transform: scale(0);
+    transition: transform 0.5s;
+  }
+}
+
+.create-challenge-overlay--active {
+  position: fixed;
+  overflow-y: scroll;
+  inset: 0;
+}
+
+.create-challenge-success--active.create-challenge-success--active.create-challenge-success--active {
+  visibility: visible;
+  transform: scale(1);
 }
 
 .challenge-preview {
@@ -133,7 +163,8 @@
   font-size: 1.5rem;
 }
 
-.pick-challenge-legends, .pick-challenge-weapons {
+.pick-challenge-legends,
+.pick-challenge-weapons {
   @include u.flexCenter;
   flex-wrap: wrap;
   display: none;
@@ -147,7 +178,7 @@
   input {
     display: none;
   }
-  
+
   label {
     display: flex;
     flex-direction: column;

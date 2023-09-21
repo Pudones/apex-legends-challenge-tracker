@@ -17,7 +17,7 @@ const challengePreviewText = document.querySelector(".challenge-preview-text");
 const challengesCreated = document.getElementsByClassName("challenges-created");
 const optimizeOverlay = document.querySelector(".optimize-challenge-overlay");
 const warningWindow = document.querySelector(".warning-window");
-const optimizeOverlayWindow = document.querySelector(".optimize-challenge-overlay-container");
+const optimizeChallengesContainer = document.querySelector(".optimize-challenge-overlay-container");
 
 // Inputs
 const challengeTypeInput = document.querySelectorAll(".challenge-types input");
@@ -32,10 +32,12 @@ const midBar = document.querySelector(".middle-bar");
 const bottomBar = document.querySelector(".bottom-bar");
 
 const blurOverlay = document.querySelector(".blur-overlay");
-const confirmationOverlay = document.querySelector(".confirmation-overlay");
 
+const confirmationOverlay = document.querySelector(".confirmation-overlay");
+const confirmationActionText = document.querySelector(".confirmation-action");
 const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
 const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
+
 const challengeDeleteCompletedBtn = document.querySelector(".challenges-delete-completed");
 const headerNavButton = document.querySelector(".header-button");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
@@ -62,7 +64,7 @@ let isNavOpen;
 
 // Arrays
 // This array handle elements of the challenge creation visibility.
-const createChallengeComponents = [createChallengeOverlay, challengePreview, blurOverlay];
+const createChallengeComponents = [challengePreview, blurOverlay];
 // This array handle all the elements that somehow impact visibility (IE. Types, Subtypes, Grid to pick Weapons and Legends, etc.)
 const divsArr = [challengeSubtypesWrapper, challengeSubtypeLegends, challengeSubtypeWeapons, legendsPick, weaponsPick];
 // This array handle all the elements that have checkboxes.
@@ -120,18 +122,29 @@ headerNavButton.addEventListener("click", () => {
 // Handler for the click on the navbar that opens the challenge creation.
 navChallengesLink.addEventListener("click", () => {
   nav.classList.toggle("nav--opened");
-  createChallengeOverlay.classList.toggle("none");
-  submit.classList.remove("block");
-  document.body.classList.remove("no-scroll");
-  removeNoneClass(blurOverlay);
   isNavOpen = false;
+
+  createChallengeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
+  submit.classList.remove("block");
+
+  setTimeout(() => {
+    createChallengeOverlay.removeAttribute("style");
+    createChallengeOverlay.classList.add("create-challenge-overlay--active");
+    document.body.classList.remove("no-scroll");
+  }, 550);
 });
 // Same as the above, but instead of the element being clicked be the link on the nav, it's a button that appears when there's no challenge created. It's not a good practice to "appoint problems" to the users without giving them a solution.
 createChallengeTextLink.addEventListener("click", () => {
-  createChallengeOverlay.classList.toggle("none");
+  createChallengeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
   submit.classList.remove("block");
-  document.body.classList.remove("no-scroll");
-  removeNoneClass(blurOverlay);
+
+  setTimeout(() => {
+    createChallengeOverlay.removeAttribute("style");
+    createChallengeOverlay.classList.add("create-challenge-overlay--active");
+    document.body.classList.remove("no-scroll");
+  }, 550);
 });
 
 createChallengeBackBtn.addEventListener("click", () => {
@@ -142,16 +155,21 @@ createChallengeBackBtn.addEventListener("click", () => {
 
   uncheckAll(checkboxesArr);
   resetContentVisibility(divsArr);
-  addMultipleNoneClass(createChallengeComponents);
+  createChallengeOverlay.classList.remove("create-challenge-overlay--active");
+
+  addNoneClass(challengePreview);
+
+  setTimeout(() => {
+    blurOverlay.classList.remove("blur-overlay--active");
+  }, 500);
+
   checkChallengesCreatedState();
 });
 
 challengeToolboxBtn.addEventListener("click", () => challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active"));
 
-const confirmationActionText = document.querySelector(".confirmation-action");
-
 challengeDeleteAllBtn.addEventListener("click", () => {
-
+  
   if (challengesCreated.length < 1) {
     challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
     showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
@@ -179,6 +197,8 @@ challengeDeleteAllBtn.addEventListener("click", () => {
 });
 
 challengeDeleteCompletedBtn.addEventListener("click", () => {
+  const completeChallenges = [];
+
   if (challengesCreated.length < 1) {
     challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
     showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
@@ -186,30 +206,47 @@ challengeDeleteCompletedBtn.addEventListener("click", () => {
   }
 
   Array.from(challengesCreated).forEach(el => {
-    if (el.getAttribute("challengecomplete") === "true") {
-      el.remove();
-      saveChallenges();
-      checkChallengesCreatedState();
-    } else {
-      showWarningWindow("Can't delete challenges.", "(All challenges are incomplete.)");
-      return;
-    }
+    if (el.getAttribute("challengecomplete") === "true") completeChallenges.push(el);
   });
 
-  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+  if (completeChallenges.length > 0) {
+    for (challenge of completeChallenges) {
+      challenge.remove();
+      saveChallenges();
+      checkChallengesCreatedState();
+    }
+  } else {
+    showWarningWindow("Can't delete challenges.", "(All challenges are incomplete.)");
+  }
 
+  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+  return;
 });
 
-navChallengesOptimize.addEventListener("click", () => {
-  const eligibleChallenges = [];
+const optimizerAccordionBtns = document.getElementsByClassName("optimize-challenge-accordion-title");
+const optimizerAccordionOption = document.getElementsByClassName("optimize-challenge-option--acordion");
+
+const optimizeChallenges = () => {
+  const accordionHeights = [];
   const challengeOcurrenceArray = [];
+  const eligibleChallenges = Array.from(challengesCreated).filter(el => {
+    if (el.getAttribute("challengecomplete") === "false") return el;
+  });
 
-  for (el of challengesCreated) if (el.getAttribute("challengecomplete") === "false") eligibleChallenges.push(el);
-
+  clearElements(optimizerAccordionBtns);
+  clearElements(optimizerAccordionOption);
 
   // If there's ONE or ZERO challenges:
   if (eligibleChallenges.length < 2) {
-    nav.classList.toggle("nav--opened");
+    console.log("voltou aquie.");
+
+    bodyElement.classList.remove("no-scroll");
+    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
+    setTimeout(() => {
+      blurOverlay.classList.remove("blur-overlay--active");
+    }, 500);
+
+    nav.classList.remove("nav--opened");
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
     isNavOpen = false;
 
@@ -218,13 +255,6 @@ navChallengesOptimize.addEventListener("click", () => {
 
     return;
   }
-
-  nav.classList.toggle("nav--opened");
-  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-  isNavOpen = false;
-
-  removeNoneClass(blurOverlay);
-  optimizeOverlay.classList.toggle("optimize-challenge-overlay--active");
 
   for (el of eligibleChallenges) {
     let challengeText = el.children[3].textContent;
@@ -236,42 +266,161 @@ navChallengesOptimize.addEventListener("click", () => {
     });
   }
 
-  // This variable holds the value of the return of the function below, either the element that appears more times or "false" if there's only ONE challenge created (becoming impossible to optimize)
-  let challengeOcurrenceElement = checkBiggestOccurrence(challengeOcurrenceArray, challengeOcurrenceArray.length);
+  const filteredOcurrenceArrs = checkBiggestOccurrence(challengeOcurrenceArray, challengeOcurrenceArray.length);
 
-  // If all challenges are different:
-  if (challengeOcurrenceElement === false) {
-    addNoneClass(blurOverlay);
-    optimizeOverlay.classList.toggle("optimize-challenge-overlay--active");
+  if (filteredOcurrenceArrs === "noElementGreaterThanOne") {
+    nav.classList.remove("nav--opened");
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+    isNavOpen = false;
 
+    blurOverlay.classList.remove("blur-overlay--active");
+    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
     showWarningWindow("Can't optimize challenges.", "(Maybe all challenges are different?)");
     return;
   }
 
-  // This will reset the challenge cards from the optimizer if there's any.
-  const challengeCardArr = document.querySelectorAll(".optimize-challenge-card");
-  challengeCardArr.forEach(el => el.remove());
+  nav.classList.remove("nav--opened");
+  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+  isNavOpen = false;
 
-  eligibleChallenges.forEach(el => {
-    const textOfChallenge = el.children[3].textContent;
+  optimizeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
 
-    if (textOfChallenge.includes(challengeOcurrenceElement)) createChallengeCardOptimizer(textOfChallenge);
-  });
+  setTimeout(() => {
+    optimizeOverlay.removeAttribute("style");
+    optimizeOverlay.classList.add("optimize-challenge-overlay--active");
+  }, 500);
 
-  optimizeBanner.src = legendsImages[`${challengeOcurrenceElement.toLowerCase()}`];
+  const filteredOcurrenceNames = filteredOcurrenceArrs[0];
+  const filteredOccurenceNumber = filteredOcurrenceArrs[1];
 
-  if (challengeOcurrenceElement === "maggie") {
-    textInputOfOptimizedChallenge.textContent = "Mad Maggie";
-    return;
+  for (let i = 0; i < filteredOcurrenceNames.length; i++) {
+    if (filteredOccurenceNumber[i] > 1) {
+      createOptimizerAccordion(filteredOcurrenceNames[i], eligibleChallenges);
+      // console.log(`${filteredOcurrenceNames[i]} appear ${filteredOccurenceNumber[i]} times.`);
+    }
   }
 
-  textInputOfOptimizedChallenge.textContent = challengeOcurrenceElement;
+  // This will get the height of each accordion to calculate how many max-height they will need.
+  Array.from(optimizerAccordionBtns).forEach(el => accordionHeights.push(el.nextElementSibling.offsetHeight));
+
+  Array.from(optimizerAccordionBtns).forEach((el, index) => {
+    const accordionPanel = el.nextElementSibling;
+    accordionPanel.style.maxHeight = 0;
+
+    el.addEventListener("click", () => {
+      if (accordionPanel.style.maxHeight === "0px") {
+        accordionPanel.style.maxHeight = accordionHeights[index] + "px";
+
+        console.log(accordionPanel, accordionHeights[index]);
+      }
+      else {
+        accordionPanel.style.maxHeight = "0";
+      }
+    });
+  });
+};
+
+const createOptimizerAccordion = (string, eligibleArr) => {
+  const accBtn = document.createElement("button");
+  accBtn.classList.add("optimize-challenge-accordion-title", "mt30", "mb30");
+  accBtn.textContent = string;
+
+  const accWrapper = document.createElement("div");
+  accWrapper.classList.add("optimize-challenge-option", "optimize-challenge-option--acordion");
+
+  const accBanner = document.createElement("img");
+  accBanner.classList.add("optimize-challenge-banner");
+  accBanner.src = legendsImages[`${string.toLowerCase()}`];
+
+  const accSeparator = document.createElement("div");
+  accSeparator.classList.add("separator");
+
+  const accChallengesDisplay = document.createElement("div");
+  accChallengesDisplay.classList.add("optimize-challenge-display-challenges");
+
+  const accChallengesDisplayTitle = document.createElement("p");
+  accChallengesDisplayTitle.classList.add("text-center");
+  accChallengesDisplayTitle.textContent = "Challenges:";
+
+  optimizeChallengesContainer.appendChild(accBtn);
+  accChallengesDisplay.appendChild(accChallengesDisplayTitle);
+  accWrapper.append(accBanner, accSeparator, accChallengesDisplay);
+  optimizeChallengesContainer.appendChild(accWrapper);
+
+  Array.from(eligibleArr).forEach(el => {
+    const challengeText = el.children[3].textContent;
+
+    if (challengeText.includes(string)) {
+      const challengeCardDiv = document.createElement("div");
+
+      const challengeCompleteOverlay = document.createElement("div");
+      challengeCompleteOverlay.classList.add("challenges-created--completed", "none");
+      challengeCompleteOverlay.textContent = "CHALLENGE COMPLETE!";
+
+      const challengeCompleteBtn = document.createElement("button");
+      challengeCompleteBtn.classList.add("challenges-created-complete-btn");
+      challengeCompleteBtn.onclick = () => {
+        const parentElement = challengeCompleteBtn.parentElement;
+        const mainPageChallengeCompleteOverlay = el.children[1];
+
+        if (parentElement.getAttribute("challengecomplete") === "true") {
+          parentElement.setAttribute("challengecomplete", "false");
+          el.setAttribute("challengecomplete", "false");
+          addNoneClass(challengeCompleteOverlay);
+          addNoneClass(mainPageChallengeCompleteOverlay);
+          saveChallenges();
+          checkChallengesCreatedState();
+          return;
+        }
+
+        parentElement.setAttribute("challengecomplete", "true");
+        el.setAttribute("challengecomplete", "true");
+        removeNoneClass(el.children[1]);
+        removeNoneClass(challengeCompleteOverlay);
+        saveChallenges();
+        optimizeChallenges();
+      }
+
+      const challengeDeleteBtn = document.createElement("button");
+      challengeDeleteBtn.classList.add("challenges-created-delete");
+      challengeDeleteBtn.onclick = () => {
+        const parentElement = challengeDeleteBtn.parentElement;
+        parentElement.remove();
+        el.remove();
+        saveChallenges();
+        optimizeChallenges();
+      }
+
+      challengeCardDiv.classList.add("optimize-challenge-card", "text-center");
+      challengeCardDiv.textContent = challengeText;
+      challengeCardDiv.append(challengeCompleteOverlay, challengeCompleteBtn, challengeDeleteBtn);
+      accChallengesDisplay.appendChild(challengeCardDiv);
+    }
+  });
+};
+
+const clearElements = elementsArr => {
+  Array.from(elementsArr).forEach(el => {
+    el.remove();
+  });
+};
+
+navChallengesOptimize.addEventListener("click", () => {
+  optimizeChallenges();
+  bodyElement.classList.add("no-scroll");
 });
 
 optimizeChallengeBackBtn.addEventListener("click", () => {
-  addNoneClass(blurOverlay);
+  clearElements(optimizerAccordionBtns);
+  clearElements(optimizerAccordionOption);
+
   bodyElement.classList.remove("no-scroll");
   optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
+
+  setTimeout(() => {
+    blurOverlay.classList.remove("blur-overlay--active");
+  }, 500);
 });
 
 const toggleBorder = el => el.classList.toggle("--borderGreen");
@@ -283,7 +432,9 @@ const resetBorder = arr => {
 const showContent = content => content.classList.add("flex");
 
 const addNoneClass = content => content.classList.add("none");
+
 const addMultipleNoneClass = arr => arr.forEach(el => el.classList.add("none"));
+
 const removeNoneClass = content => content.classList.remove("none");
 
 const resetContentVisibility = arr => {
@@ -299,27 +450,45 @@ const uncheckAll = arr => {
   }
 };
 
+const findBiggestIndex = arr => {
+  let max = 0;
+  let indexArr = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] > max) {
+      max = arr[i];
+      indexArr = [i];
+    } else if (arr[i] === max) {
+      indexArr.push(i);
+    }
+  }
+
+  return indexArr;
+};
+
 const checkBiggestOccurrence = (arr, arrLength) => {
-  let maxCount = 0;
-  let elementMostFrequent;
+  const alreadyUsed = [];
+  const countArray = [];
 
   for (let i = 0; i < arrLength; i++) {
     let count = 0;
 
-    for (let j = 0; j < arrLength; j++) {
-      if (arr[i] === arr[j]) count++;
-    }
+    // This will prevent that an element gets checked two times, preventing duplicates.
+    if (alreadyUsed.includes(arr[i])) continue;
 
-    if (count > maxCount) {
-      maxCount = count;
-      elementMostFrequent = arr[i];
-    }
+    for (let j = 0; j < arrLength; j++) if (arr[i] === arr[j]) count++;
+
+    // console.log(arr[i], count);
+
+    alreadyUsed.push(arr[i]);
+    countArray.push(count);
   }
 
-  if (maxCount === 1) return false;
+  // If ANY element from countArray is bigger than 1, it means that the challenge appear more than one time, then it CAN BE optimized.
+  for (element of countArray) if (element > 1) return [alreadyUsed, countArray];
 
-  // Otherwise, return the most frequent element in the array.
-  return elementMostFrequent;
+  // If the check above fails, it means that there's no elements that appear more than one time, then it's impossible to optimize.
+  return "noElementGreaterThanOne";
 };
 
 const showWarningWindow = (topText, bottomText) => {
@@ -331,7 +500,7 @@ const showWarningWindow = (topText, bottomText) => {
   setTimeout(() => {
     warningWindow.classList.remove("warning-window--active");
   }, 3800);
-}
+};
 
 const formatSubtypeText = sub => {
   const subtypes = ["Play", "Damage", "Kills", "Knockdowns"];
@@ -559,8 +728,8 @@ const checkChallengesCreatedState = () => {
   } else {
     const challengeCreatedLastIndex = challengesCreated.length - 1;
 
-    Array.from(challengesCreated).forEach(el => el.classList.remove("mb10vh"));
-    challengesCreated[challengeCreatedLastIndex].classList.add("mb10vh");
+    Array.from(challengesCreated).forEach(el => el.classList.remove("mb85"));
+    challengesCreated[challengeCreatedLastIndex].classList.add("mb85");
 
     createdChallengesWrapper.style.justifyContent = "flex-start";
     // If the second child from the element is undefined, that means that it doesn't exist, so we assume that there's no Challenge Created in this category, then it's safe to hide the Title until the user create a challenge.
@@ -631,7 +800,6 @@ challengeSubtypeInput.forEach(el => el.addEventListener("change", el => {
   const subtypeInput = el.target;
   const borderElement = subtypeInput.nextElementSibling.children[1];
 
-  console.log(subtypeInput)
   challengeSubtypeVar = subtypeInput;
 
   removeNoneClass(challengePreview);
@@ -656,18 +824,26 @@ legendsInput.forEach(el => el.addEventListener("change", handleSelection));
 
 weaponsInput.forEach(el => el.addEventListener("change", handleSelection));
 
+const challengeCreationSuccessDisplay = document.querySelector(".create-challenge-success");
+
 submit.addEventListener("click", () => {
   const challengeText = generateChallengeText();
-
   createChallengeCard(challengeText);
   saveChallenges();
 
-  // Resets after the user creates the challenge
-  uncheckAll(checkboxesArr);
-  resetContentVisibility(divsArr);
-  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+  addNoneClass(challengePreview);
+  challengeCreationSuccessDisplay.classList.toggle("create-challenge-success--active");
 
-  createChallengeComponents.forEach(el => addNoneClass(el));
+  // Resets after the user creates the challenge
+  setTimeout(() => {
+    blurOverlay.classList.remove("blur-overlay--active");
+    createChallengeOverlay.classList.remove("create-challenge-overlay--active");
+    uncheckAll(checkboxesArr);
+    resetContentVisibility(divsArr);
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+  }, 500);
+
+  setTimeout(() => challengeCreationSuccessDisplay.classList.toggle("create-challenge-success--active"), 2000);
 
   checkChallengesCreatedState();
 });

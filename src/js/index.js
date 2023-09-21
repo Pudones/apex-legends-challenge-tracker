@@ -40,6 +40,7 @@ const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
 
 const challengeDeleteCompletedBtn = document.querySelector(".challenges-delete-completed");
 const headerNavButton = document.querySelector(".header-button");
+const createChallengeButton = document.querySelector(".create-challenges-button-header");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
 const challengeToolboxBtn = document.querySelector(".challenges-toolbox");
 const challengeDeleteAllBtn = document.querySelector(".challenges-delete-all");
@@ -146,7 +147,23 @@ headerNavButton.addEventListener("click", () => {
   bodyElement.classList.add("no-scroll");
 });
 
-// Handler for the click on the navbar that opens the challenge creation.
+
+// The next 3 events does the same: Open the challenge creation.
+// 1. The + button on the mobile header.
+// 2. The button link of the header (Desktop and Mobile)
+// 3. The text-link that appears when there's no challenges created. It's not a good practice to present a problem to the user without a solution.
+createChallengeButton.addEventListener("click", () => {
+  createChallengeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
+  submit.classList.remove("block");
+
+  setTimeout(() => {
+    createChallengeOverlay.removeAttribute("style");
+    createChallengeOverlay.classList.add("create-challenge-overlay--active");
+    document.body.classList.remove("no-scroll");
+  }, 550);
+});
+
 navChallengesLink.addEventListener("click", () => {
   nav.classList.remove("nav--opened");
   isNavOpen = false;
@@ -161,7 +178,7 @@ navChallengesLink.addEventListener("click", () => {
     bodyElement.classList.add("no-scroll");
   }, 550);
 });
-// Same as the above, but instead of the element being clicked be the link on the nav, it's a button that appears when there's no challenge created. It's not a good practice to "appoint problems" to the users without giving them a solution.
+
 createChallengeTextLink.addEventListener("click", () => {
   createChallengeOverlay.style.top = "0";
   blurOverlay.classList.add("blur-overlay--active");
@@ -254,188 +271,6 @@ challengeDeleteCompletedBtn.addEventListener("click", () => {
 
 const optimizerAccordionBtns = document.getElementsByClassName("optimize-challenge-accordion-title");
 const optimizerAccordionOption = document.getElementsByClassName("optimize-challenge-option--acordion");
-
-const optimizeChallenges = () => {
-  const accordionHeights = [];
-  const challengeOcurrenceArray = [];
-  const eligibleChallenges = Array.from(challengesCreated).filter(el => {
-    if (el.getAttribute("challengecomplete") === "false") return el;
-  });
-
-  clearElements(optimizerAccordionBtns);
-  clearElements(optimizerAccordionOption);
-
-  // If there's ONE or ZERO challenges:
-  if (eligibleChallenges.length < 2) {
-    console.log("voltou aquie.");
-
-    bodyElement.classList.remove("no-scroll");
-    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
-    setTimeout(() => {
-      blurOverlay.classList.remove("blur-overlay--active");
-    }, 500);
-
-    nav.classList.remove("nav--opened");
-    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-    isNavOpen = false;
-
-    if (eligibleChallenges.length === 0) showWarningWindow("Can't optimize challenges.", "(There's no challenges to optimize.)");
-    if (eligibleChallenges.length === 1) showWarningWindow("Can't optimize challenges.", "(Only one challenge exists.)");
-
-    return;
-  }
-
-  for (el of eligibleChallenges) {
-    let challengeText = el.children[3].textContent;
-
-    challengeText = challengeText.replace(/[^a-zA-Z]+/g, ' ').split(" ");
-
-    challengeText.forEach(el => {
-      if (filterChallengesArray.includes(el)) return;
-      challengeOcurrenceArray.push(el);
-    });
-  }
-
-  const filteredOcurrenceArrs = checkBiggestOccurrence(challengeOcurrenceArray, challengeOcurrenceArray.length);
-
-  if (filteredOcurrenceArrs === "noElementGreaterThanOne") {
-    nav.classList.remove("nav--opened");
-    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-    isNavOpen = false;
-
-    blurOverlay.classList.remove("blur-overlay--active");
-    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
-    showWarningWindow("Can't optimize challenges.", "(Maybe all challenges are different?)");
-    return;
-  }
-
-  nav.classList.remove("nav--opened");
-  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-  isNavOpen = false;
-
-  optimizeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
-
-  setTimeout(() => {
-    optimizeOverlay.removeAttribute("style");
-    optimizeOverlay.classList.add("optimize-challenge-overlay--active");
-  }, 500);
-
-  const filteredOcurrenceNames = filteredOcurrenceArrs[0];
-  const filteredOccurenceNumber = filteredOcurrenceArrs[1];
-
-  for (let i = 0; i < filteredOcurrenceNames.length; i++) {
-    if (filteredOccurenceNumber[i] > 1) {
-      createOptimizerAccordion(filteredOcurrenceNames[i], eligibleChallenges);
-      // console.log(`${filteredOcurrenceNames[i]} appear ${filteredOccurenceNumber[i]} times.`);
-    }
-  }
-
-  // This will get the height of each accordion to calculate how many max-height they will need.
-  Array.from(optimizerAccordionBtns).forEach(el => accordionHeights.push(el.nextElementSibling.offsetHeight));
-
-  Array.from(optimizerAccordionBtns).forEach((el, index) => {
-    const accordionPanel = el.nextElementSibling;
-    accordionPanel.style.maxHeight = 0;
-
-    el.addEventListener("click", () => {
-      if (accordionPanel.style.maxHeight === "0px") {
-        accordionPanel.style.maxHeight = accordionHeights[index] + "px";
-      }
-      else {
-        accordionPanel.style.maxHeight = "0";
-      }
-    });
-  });
-};
-
-const createOptimizerAccordion = (string, eligibleArr) => {
-  const accBtn = document.createElement("button");
-  accBtn.classList.add("optimize-challenge-accordion-title", "mt30", "mb30");
-
-  if (weaponTags.includes(string)) {
-    accBtn.textContent = formatWeaponName(string);
-  } else {
-    accBtn.textContent = string;
-  }
-
-  const accWrapper = document.createElement("div");
-  accWrapper.classList.add("optimize-challenge-option", "optimize-challenge-option--acordion");
-
-  const accBanner = document.createElement("img");
-  accBanner.classList.add("optimize-challenge-banner");
-  if (weaponTags.includes(string)) {
-    accBanner.src = weaponsImages[`${string.toLowerCase()}`];
-  } else {
-    accBanner.src = legendsImages[`${string.toLowerCase()}`];
-  }
-
-  const accSeparator = document.createElement("div");
-  accSeparator.classList.add("separator");
-
-  const accChallengesDisplay = document.createElement("div");
-  accChallengesDisplay.classList.add("optimize-challenge-display-challenges");
-
-  const accChallengesDisplayTitle = document.createElement("p");
-  accChallengesDisplayTitle.classList.add("text-center");
-  accChallengesDisplayTitle.textContent = "Challenges:";
-
-  optimizeChallengesContainer.appendChild(accBtn);
-  accChallengesDisplay.appendChild(accChallengesDisplayTitle);
-  accWrapper.append(accBanner, accSeparator, accChallengesDisplay);
-  optimizeChallengesContainer.appendChild(accWrapper);
-
-  Array.from(eligibleArr).forEach(el => {
-    const challengeText = el.children[3].textContent;
-
-    if (challengeText.includes(string)) {
-      const challengeCardDiv = document.createElement("div");
-
-      const challengeCompleteOverlay = document.createElement("div");
-      challengeCompleteOverlay.classList.add("challenges-created--completed", "none");
-      challengeCompleteOverlay.textContent = "CHALLENGE COMPLETE!";
-
-      const challengeCompleteBtn = document.createElement("button");
-      challengeCompleteBtn.classList.add("challenges-created-complete-btn");
-      challengeCompleteBtn.onclick = () => {
-        const parentElement = challengeCompleteBtn.parentElement;
-        const mainPageChallengeCompleteOverlay = el.children[1];
-
-        if (parentElement.getAttribute("challengecomplete") === "true") {
-          parentElement.setAttribute("challengecomplete", "false");
-          el.setAttribute("challengecomplete", "false");
-          addNoneClass(challengeCompleteOverlay);
-          addNoneClass(mainPageChallengeCompleteOverlay);
-          saveChallenges();
-          checkChallengesCreatedState();
-          return;
-        }
-
-        parentElement.setAttribute("challengecomplete", "true");
-        el.setAttribute("challengecomplete", "true");
-        removeNoneClass(el.children[1]);
-        removeNoneClass(challengeCompleteOverlay);
-        saveChallenges();
-        optimizeChallenges();
-      }
-
-      const challengeDeleteBtn = document.createElement("button");
-      challengeDeleteBtn.classList.add("challenges-created-delete");
-      challengeDeleteBtn.onclick = () => {
-        const parentElement = challengeDeleteBtn.parentElement;
-        parentElement.remove();
-        el.remove();
-        saveChallenges();
-        optimizeChallenges();
-      }
-
-      challengeCardDiv.classList.add("optimize-challenge-card", "text-center");
-      challengeCardDiv.textContent = challengeText;
-      challengeCardDiv.append(challengeCompleteOverlay, challengeCompleteBtn, challengeDeleteBtn);
-      accChallengesDisplay.appendChild(challengeCardDiv);
-    }
-  });
-};
 
 const clearElements = elementsArr => {
   Array.from(elementsArr).forEach(el => {
@@ -726,14 +561,185 @@ const createChallengeCard = challenge => {
   if (challengeTypeSelected === 2) return createdChallengesWeapons.appendChild(challengeDiv);
 };
 
-const createChallengeCardOptimizer = challenge => {
-  const challengeCardWrapper = document.querySelector(".optimize-challenge-display-challenges");
+const optimizeChallenges = () => {
+  const accordionHeights = [];
+  const challengeOcurrenceArray = [];
+  const eligibleChallenges = Array.from(challengesCreated).filter(el => {
+    if (el.getAttribute("challengecomplete") === "false") return el;
+  });
 
-  const challengeCardDiv = document.createElement("div");
-  challengeCardDiv.classList.add("optimize-challenge-card", "text-center");
-  challengeCardDiv.textContent = challenge;
+  clearElements(optimizerAccordionBtns);
+  clearElements(optimizerAccordionOption);
 
-  challengeCardWrapper.appendChild(challengeCardDiv);
+  // If there's ONE or ZERO challenges:
+  if (eligibleChallenges.length < 2) {
+    console.log("voltou aquie.");
+
+    bodyElement.classList.remove("no-scroll");
+    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
+    setTimeout(() => {
+      blurOverlay.classList.remove("blur-overlay--active");
+    }, 500);
+
+    nav.classList.remove("nav--opened");
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+    isNavOpen = false;
+
+    if (eligibleChallenges.length === 0) showWarningWindow("Can't optimize challenges.", "(There's no challenges to optimize.)");
+    if (eligibleChallenges.length === 1) showWarningWindow("Can't optimize challenges.", "(Only one challenge exists.)");
+
+    return;
+  }
+
+  for (el of eligibleChallenges) {
+    let challengeText = el.children[3].textContent;
+
+    challengeText = challengeText.replace(/[^a-zA-Z]+/g, ' ').split(" ");
+
+    challengeText.forEach(el => {
+      if (filterChallengesArray.includes(el)) return;
+      challengeOcurrenceArray.push(el);
+    });
+  }
+
+  const filteredOcurrenceArrs = checkBiggestOccurrence(challengeOcurrenceArray, challengeOcurrenceArray.length);
+
+  if (filteredOcurrenceArrs === "noElementGreaterThanOne") {
+    nav.classList.remove("nav--opened");
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+    isNavOpen = false;
+
+    blurOverlay.classList.remove("blur-overlay--active");
+    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
+    showWarningWindow("Can't optimize challenges.", "(Maybe all challenges are different?)");
+    return;
+  }
+
+  nav.classList.remove("nav--opened");
+  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+  isNavOpen = false;
+
+  optimizeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
+
+  setTimeout(() => {
+    optimizeOverlay.removeAttribute("style");
+    optimizeOverlay.classList.add("optimize-challenge-overlay--active");
+  }, 500);
+
+  const filteredOcurrenceNames = filteredOcurrenceArrs[0];
+  const filteredOccurenceNumber = filteredOcurrenceArrs[1];
+
+  for (let i = 0; i < filteredOcurrenceNames.length; i++) {
+    if (filteredOccurenceNumber[i] > 1) {
+      createOptimizerAccordion(filteredOcurrenceNames[i], eligibleChallenges);
+      // console.log(`${filteredOcurrenceNames[i]} appear ${filteredOccurenceNumber[i]} times.`);
+    }
+  }
+
+  // This will get the height of each accordion to calculate how many max-height they will need.
+  Array.from(optimizerAccordionBtns).forEach(el => accordionHeights.push(el.nextElementSibling.offsetHeight));
+
+  Array.from(optimizerAccordionBtns).forEach((el, index) => {
+    const accordionPanel = el.nextElementSibling;
+    accordionPanel.style.maxHeight = 0;
+
+    el.addEventListener("click", () => {
+      if (accordionPanel.style.maxHeight === "0px") {
+        accordionPanel.style.maxHeight = accordionHeights[index] + "px";
+      }
+      else {
+        accordionPanel.style.maxHeight = "0";
+      }
+    });
+  });
+};
+
+const createOptimizerAccordion = (string, eligibleArr) => {
+  const accBtn = document.createElement("button");
+  accBtn.classList.add("optimize-challenge-accordion-title", "mt30", "mb30");
+  accBtn.addEventListener("click", () => {
+    accBtn.classList.toggle("optimize-challenge-accordion-title--active");
+  });
+
+  weaponTags.includes(string) ? accBtn.textContent = formatWeaponName(string) : accBtn.textContent = string;
+
+  const accWrapper = document.createElement("div");
+  accWrapper.classList.add("optimize-challenge-option", "optimize-challenge-option--acordion");
+
+  const accBanner = document.createElement("img");
+  accBanner.classList.add("optimize-challenge-banner");
+  if (weaponTags.includes(string)) {
+    accBanner.src = weaponsImages[`${string.toLowerCase()}`];
+  } else {
+    accBanner.src = legendsImages[`${string.toLowerCase()}`];
+  }
+
+  const accSeparator = document.createElement("div");
+  accSeparator.classList.add("separator");
+
+  const accChallengesDisplay = document.createElement("div");
+  accChallengesDisplay.classList.add("optimize-challenge-display-challenges");
+
+  const accChallengesDisplayTitle = document.createElement("p");
+  accChallengesDisplayTitle.classList.add("text-center");
+  accChallengesDisplayTitle.textContent = "Challenges:";
+
+  optimizeChallengesContainer.appendChild(accBtn);
+  accChallengesDisplay.appendChild(accChallengesDisplayTitle);
+  accWrapper.append(accBanner, accSeparator, accChallengesDisplay);
+  optimizeChallengesContainer.appendChild(accWrapper);
+
+  Array.from(eligibleArr).forEach(el => {
+    const challengeText = el.children[3].textContent;
+
+    if (challengeText.includes(string)) {
+      const challengeCardDiv = document.createElement("div");
+
+      const challengeCompleteOverlay = document.createElement("div");
+      challengeCompleteOverlay.classList.add("challenges-created--completed", "none");
+      challengeCompleteOverlay.textContent = "CHALLENGE COMPLETE!";
+
+      const challengeCompleteBtn = document.createElement("button");
+      challengeCompleteBtn.classList.add("challenges-created-complete-btn");
+      challengeCompleteBtn.onclick = () => {
+        const parentElement = challengeCompleteBtn.parentElement;
+        const mainPageChallengeCompleteOverlay = el.children[1];
+
+        if (parentElement.getAttribute("challengecomplete") === "true") {
+          parentElement.setAttribute("challengecomplete", "false");
+          el.setAttribute("challengecomplete", "false");
+          addNoneClass(challengeCompleteOverlay);
+          addNoneClass(mainPageChallengeCompleteOverlay);
+          saveChallenges();
+          checkChallengesCreatedState();
+          return;
+        }
+
+        parentElement.setAttribute("challengecomplete", "true");
+        el.setAttribute("challengecomplete", "true");
+        removeNoneClass(el.children[1]);
+        removeNoneClass(challengeCompleteOverlay);
+        saveChallenges();
+        optimizeChallenges();
+      }
+
+      const challengeDeleteBtn = document.createElement("button");
+      challengeDeleteBtn.classList.add("challenges-created-delete");
+      challengeDeleteBtn.onclick = () => {
+        const parentElement = challengeDeleteBtn.parentElement;
+        parentElement.remove();
+        el.remove();
+        saveChallenges();
+        optimizeChallenges();
+      }
+
+      challengeCardDiv.classList.add("optimize-challenge-card", "text-center");
+      challengeCardDiv.textContent = challengeText;
+      challengeCardDiv.append(challengeCompleteOverlay, challengeCompleteBtn, challengeDeleteBtn);
+      accChallengesDisplay.appendChild(challengeCardDiv);
+    }
+  });
 };
 
 const saveChallenges = () => {

@@ -32,7 +32,6 @@
 
 
 
-
 .blur-overlay {
   position: absolute;
   backdrop-filter: blur(70px);
@@ -77,13 +76,34 @@
     // min-height: 100%;
 
     .optimize-challenge-accordion-title {
-      font-size: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: "TTLakes", sans-serif;
+      font-size: 1.8rem;
       background: none;
+      border: none;
+      border-bottom: 1px solid rgb(255, 255, 255, 0.4);
       width: 100%;
       padding: 10px;
       color: white;
-      border: none;
-      font-family: "TTLakes", sans-serif;
+      transition: background .2s linear;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      &:after {
+        content: "\e5cf";
+        font-family: 'Material Symbols Outlined';
+        font-size: 1.875rem;
+        height: 100%;
+        transition: transform .5s linear;
+      }
+
+      &--active:after {
+        transform: rotate(180deg);
+      }
     }
 
     .optimize-challenge-option {
@@ -130,14 +150,10 @@
   inset: 0;
 }
 
-// .optimize-challenge-option--accordion.optimize-challenge-option--accordion.optimize-challenge-option--accordion {
-//   max-height: 2500px;
-// }
-
 
 
 .warning-window {
-  position: absolute;
+  position: fixed;
   top: -100%;
   z-index: 5;
 

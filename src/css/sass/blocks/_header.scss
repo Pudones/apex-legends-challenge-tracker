@@ -80,6 +80,40 @@ header {
     opacity: 1;
   }
 
+  .create-challenges-button-header {
+    display: block;
+    position: relative;
+    border: none;
+    width: 70px;
+    height: 60px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, 0.4);
+
+    .create-challenges-button-bar {
+      position: absolute;
+      display: block;
+      border-radius: 5px;
+      width: 30px;
+      height: 4px;
+      background: #300606;
+    }
+
+    .bar--vertical {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    .bar--horizontal {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }  
+
+    // .create-challenges-button-bar bar--vertical
+  // bar--horizontal
+
   .header-button {
     display: block;
     position: absolute;

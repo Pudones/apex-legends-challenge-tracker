@@ -69,8 +69,24 @@ const createChallengeComponents = [challengePreview, blurOverlay];
 const divsArr = [challengeSubtypesWrapper, challengeSubtypeLegends, challengeSubtypeWeapons, legendsPick, weaponsPick];
 // This array handle all the elements that have checkboxes.
 const checkboxesArr = [challengeTypeInput, challengeSubtypeInput, legendsInput, weaponsInput];
+// This array handle weaponTags that will be inputed on the function that formats the names of the weapon types.
+const weaponTags = ["Assault", "Light", "Marksman", "Pistols", "Shotguns", "Sub", "Sniper", "Red"];
 // This array handle the formatting of Weapon Classes names.
 const weaponClasses = ["Assault Rifles", "Light Machine Guns", "Marksman", "Pistols", "Shotguns", "Sub Machine Guns", "Sniper Rifles", "Red Tier Weapons"];
+// This array will be used to remove every keyword that we don't want to consider in the optimization process, such as challenge types, strings that are common to weapon types and so on.
+const filterChallengesArray = [
+  '',
+  "Play",
+  "Damage",
+  "Kills",
+  "Knockdowns",
+  "with",
+  "Weapons",
+  "Rifles",
+  "Machine",
+  "Guns",
+  "Tier"
+];
 // This array handle the bars from the navigation menu.
 const navButtonBars = [topBar, midBar, bottomBar];
 // This array handle the image sources from Legends.
@@ -99,7 +115,18 @@ const legendsImages = {
   vantage: './assets/images/legends/vantage.png',
   wattson: './assets/images/legends/wattson.png',
   wraith: './assets/images/legends/wraith.png'
-}
+};
+
+const weaponsImages = {
+  assault: './assets/images/icons/weaponClasses/assault.svg',
+  light: './assets/images/icons/weaponClasses/light.svg',
+  marksman: './assets/images/icons/weaponClasses/marksman.svg',
+  pistols: './assets/images/icons/weaponClasses/pistols.svg',
+  shotguns: './assets/images/icons/weaponClasses/shotguns.svg',
+  sub: './assets/images/icons/weaponClasses/sub.svg',
+  sniper: './assets/images/icons/weaponClasses/sniper.svg',
+  red: './assets/images/icons/weaponClasses/red.svg'
+};
 
 // Along the code, some conditionals will refer as type 1 and 2.
 // The numbers mean: 1. Legends - 2. Weapons
@@ -121,7 +148,7 @@ headerNavButton.addEventListener("click", () => {
 
 // Handler for the click on the navbar that opens the challenge creation.
 navChallengesLink.addEventListener("click", () => {
-  nav.classList.toggle("nav--opened");
+  nav.classList.remove("nav--opened");
   isNavOpen = false;
 
   createChallengeOverlay.style.top = "0";
@@ -131,7 +158,7 @@ navChallengesLink.addEventListener("click", () => {
   setTimeout(() => {
     createChallengeOverlay.removeAttribute("style");
     createChallengeOverlay.classList.add("create-challenge-overlay--active");
-    document.body.classList.remove("no-scroll");
+    bodyElement.classList.add("no-scroll");
   }, 550);
 });
 // Same as the above, but instead of the element being clicked be the link on the nav, it's a button that appears when there's no challenge created. It's not a good practice to "appoint problems" to the users without giving them a solution.
@@ -159,6 +186,8 @@ createChallengeBackBtn.addEventListener("click", () => {
 
   addNoneClass(challengePreview);
 
+  bodyElement.classList.remove("no-scroll");
+
   setTimeout(() => {
     blurOverlay.classList.remove("blur-overlay--active");
   }, 500);
@@ -169,7 +198,7 @@ createChallengeBackBtn.addEventListener("click", () => {
 challengeToolboxBtn.addEventListener("click", () => challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active"));
 
 challengeDeleteAllBtn.addEventListener("click", () => {
-  
+
   if (challengesCreated.length < 1) {
     challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
     showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
@@ -260,8 +289,9 @@ const optimizeChallenges = () => {
     let challengeText = el.children[3].textContent;
 
     challengeText = challengeText.replace(/[^a-zA-Z]+/g, ' ').split(" ");
+
     challengeText.forEach(el => {
-      if (el === "Play" || el === "Damage" || el === "Kills" || el === "Knockdowns" || el === "with" || el === '') return;
+      if (filterChallengesArray.includes(el)) return;
       challengeOcurrenceArray.push(el);
     });
   }
@@ -311,8 +341,6 @@ const optimizeChallenges = () => {
     el.addEventListener("click", () => {
       if (accordionPanel.style.maxHeight === "0px") {
         accordionPanel.style.maxHeight = accordionHeights[index] + "px";
-
-        console.log(accordionPanel, accordionHeights[index]);
       }
       else {
         accordionPanel.style.maxHeight = "0";
@@ -324,14 +352,23 @@ const optimizeChallenges = () => {
 const createOptimizerAccordion = (string, eligibleArr) => {
   const accBtn = document.createElement("button");
   accBtn.classList.add("optimize-challenge-accordion-title", "mt30", "mb30");
-  accBtn.textContent = string;
+
+  if (weaponTags.includes(string)) {
+    accBtn.textContent = formatWeaponName(string);
+  } else {
+    accBtn.textContent = string;
+  }
 
   const accWrapper = document.createElement("div");
   accWrapper.classList.add("optimize-challenge-option", "optimize-challenge-option--acordion");
 
   const accBanner = document.createElement("img");
   accBanner.classList.add("optimize-challenge-banner");
-  accBanner.src = legendsImages[`${string.toLowerCase()}`];
+  if (weaponTags.includes(string)) {
+    accBanner.src = weaponsImages[`${string.toLowerCase()}`];
+  } else {
+    accBanner.src = legendsImages[`${string.toLowerCase()}`];
+  }
 
   const accSeparator = document.createElement("div");
   accSeparator.classList.add("separator");
@@ -520,14 +557,16 @@ const formatLegendNames = legend => {
 };
 
 const formatWeaponName = weapon => {
-  if (weapon.id === "assault") return weaponClasses[0];
-  if (weapon.id === "lmg") return weaponClasses[1];
-  if (weapon.id === "marksman") return weaponClasses[2];
-  if (weapon.id === "pistols") return weaponClasses[3];
-  if (weapon.id === "shotguns") return weaponClasses[4];
-  if (weapon.id === "smg") return weaponClasses[5];
-  if (weapon.id === "sniper") return weaponClasses[6];
-  if (weapon.id === "specialwpn") return weaponClasses[7];
+  weapon = weapon.toLowerCase();
+
+  if (weapon === "assault") return weaponClasses[0];
+  if (weapon === "lmg" || weapon === "light") return weaponClasses[1];
+  if (weapon === "marksman") return weaponClasses[2];
+  if (weapon === "pistols") return weaponClasses[3];
+  if (weapon === "shotguns") return weaponClasses[4];
+  if (weapon === "smg" || weapon === "sub") return weaponClasses[5];
+  if (weapon === "sniper") return weaponClasses[6];
+  if (weapon === "specialwpn" || weapon === "red") return weaponClasses[7];
 };
 
 const generateChallengeText = () => {
@@ -544,10 +583,8 @@ const generateChallengeText = () => {
   }
 
   if (challengeTypeSelected === 2) {
-    const weaponName = formatWeaponName(selectedItem);
-
+    const weaponName = formatWeaponName(selectedItem.id);
     const phrase = `${subtype} with ${weaponName}.`;
-
     return phrase;
   }
 };
@@ -570,7 +607,7 @@ const handlePreview = () => {
   }
 
   if (challengeTypeSelected === 2) {
-    !selectedItem ? challengePreviewText.textContent = `${previewSubtype} with` : challengePreviewText.textContent = `${previewSubtype} with ${formatWeaponName(selectedItem)}.`;
+    !selectedItem ? challengePreviewText.textContent = `${previewSubtype} with` : challengePreviewText.textContent = `${previewSubtype} with ${formatWeaponName(selectedItem.id)}.`;
   }
 };
 
@@ -587,8 +624,8 @@ function handleSelection() {
 
     submit.classList.add("block");
     submit.scrollIntoView({ behavior: "smooth" });
-    console.log("Weapon Selection:");
-    console.log(selectedItem);
+    // console.log("Weapon Selection:");
+    // console.log(selectedItem);
     return;
   }
 
@@ -833,6 +870,7 @@ submit.addEventListener("click", () => {
 
   addNoneClass(challengePreview);
   challengeCreationSuccessDisplay.classList.toggle("create-challenge-success--active");
+  bodyElement.classList.remove("no-scroll");
 
   // Resets after the user creates the challenge
   setTimeout(() => {

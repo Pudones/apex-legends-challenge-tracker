@@ -89,6 +89,10 @@ header {
     border-radius: 5px;
     box-shadow: 2px 2px 8px 1px rgba(0, 0, 0, 0.4);
 
+    @include u.forDesktop {
+      display: none;
+    }
+
     .create-challenges-button-bar {
       position: absolute;
       display: block;
@@ -110,9 +114,6 @@ header {
       transform: translate(-50%, -50%);
     }
   }  
-
-    // .create-challenges-button-bar bar--vertical
-  // bar--horizontal
 
   .header-button {
     display: block;

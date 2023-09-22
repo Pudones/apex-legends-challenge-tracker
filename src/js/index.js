@@ -39,11 +39,11 @@ const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
 const confirmationNoBtn = document.querySelector(".confirmation-btn--no");
 
 const challengeDeleteCompletedBtn = document.querySelector(".challenges-delete-completed");
+const challengeDeleteAllBtn = document.querySelector(".challenges-delete-all");
 const headerNavButton = document.querySelector(".header-button");
 const createChallengeButton = document.querySelector(".create-challenges-button-header");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
 const challengeToolboxBtn = document.querySelector(".challenges-toolbox");
-const challengeDeleteAllBtn = document.querySelector(".challenges-delete-all");
 
 const navChallengesOptimize = document.querySelector("#nav-link--optimize");
 const optimizeChallengeBackBtn = document.querySelector(".optimize-challenge-back-btn");
@@ -322,22 +322,6 @@ const uncheckAll = arr => {
   }
 };
 
-const findBiggestIndex = arr => {
-  let max = 0;
-  let indexArr = [];
-
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] > max) {
-      max = arr[i];
-      indexArr = [i];
-    } else if (arr[i] === max) {
-      indexArr.push(i);
-    }
-  }
-
-  return indexArr;
-};
-
 const checkBiggestOccurrence = (arr, arrLength) => {
   const alreadyUsed = [];
   const countArray = [];
@@ -563,7 +547,7 @@ const createChallengeCard = challenge => {
 
 const optimizeChallenges = () => {
   const accordionHeights = [];
-  const challengeOcurrenceArray = [];
+  const challengeOccurrenceArray = [];
   const eligibleChallenges = Array.from(challengesCreated).filter(el => {
     if (el.getAttribute("challengecomplete") === "false") return el;
   });
@@ -573,8 +557,6 @@ const optimizeChallenges = () => {
 
   // If there's ONE or ZERO challenges:
   if (eligibleChallenges.length < 2) {
-    console.log("voltou aquie.");
-
     bodyElement.classList.remove("no-scroll");
     optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
     setTimeout(() => {
@@ -598,13 +580,13 @@ const optimizeChallenges = () => {
 
     challengeText.forEach(el => {
       if (filterChallengesArray.includes(el)) return;
-      challengeOcurrenceArray.push(el);
+      challengeOccurrenceArray.push(el);
     });
   }
 
-  const filteredOcurrenceArrs = checkBiggestOccurrence(challengeOcurrenceArray, challengeOcurrenceArray.length);
+  const filteredOccurrenceArrs = checkBiggestOccurrence(challengeOccurrenceArray, challengeOccurrenceArray.length);
 
-  if (filteredOcurrenceArrs === "noElementGreaterThanOne") {
+  if (filteredOccurrenceArrs === "noElementGreaterThanOne") {
     nav.classList.remove("nav--opened");
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
     isNavOpen = false;
@@ -627,15 +609,26 @@ const optimizeChallenges = () => {
     optimizeOverlay.classList.add("optimize-challenge-overlay--active");
   }, 500);
 
-  const filteredOcurrenceNames = filteredOcurrenceArrs[0];
-  const filteredOccurenceNumber = filteredOcurrenceArrs[1];
+  const filteredOccurrenceNames = filteredOccurrenceArrs[0];
+  const filteredOccurenceNumber = filteredOccurrenceArrs[1];
 
-  for (let i = 0; i < filteredOcurrenceNames.length; i++) {
+  const challengeArrObj = [];
+
+  filteredOccurrenceNames.forEach((el, i) => {
     if (filteredOccurenceNumber[i] > 1) {
-      createOptimizerAccordion(filteredOcurrenceNames[i], eligibleChallenges);
-      // console.log(`${filteredOcurrenceNames[i]} appear ${filteredOccurenceNumber[i]} times.`);
+
+      const challengeObject = {
+        challName: el,
+        challOccurr: filteredOccurenceNumber[i]
+      }
+
+      challengeArrObj.push(challengeObject);
     }
-  }
+  });
+
+  challengeArrObj.sort(({challOccurr: a}, {challOccurr: b}) => b - a);
+
+  challengeArrObj.forEach(el => createOptimizerAccordion(el.challName, el.challOccurr, eligibleChallenges));
 
   // This will get the height of each accordion to calculate how many max-height they will need.
   Array.from(optimizerAccordionBtns).forEach(el => accordionHeights.push(el.nextElementSibling.offsetHeight));
@@ -655,12 +648,16 @@ const optimizeChallenges = () => {
   });
 };
 
-const createOptimizerAccordion = (string, eligibleArr) => {
+const createOptimizerAccordion = (string, occurrence, eligibleArr) => {
   const accBtn = document.createElement("button");
   accBtn.classList.add("optimize-challenge-accordion-title", "mt30", "mb30");
   accBtn.addEventListener("click", () => {
     accBtn.classList.toggle("optimize-challenge-accordion-title--active");
   });
+
+  const optimizerOccNumber = document.createElement("span");
+  optimizerOccNumber.classList.add("optimize-challenge-occ");
+  optimizerOccNumber.textContent = occurrence;
 
   weaponTags.includes(string) ? accBtn.textContent = formatWeaponName(string) : accBtn.textContent = string;
 
@@ -685,6 +682,7 @@ const createOptimizerAccordion = (string, eligibleArr) => {
   accChallengesDisplayTitle.classList.add("text-center");
   accChallengesDisplayTitle.textContent = "Challenges:";
 
+  accBtn.appendChild(optimizerOccNumber);
   optimizeChallengesContainer.appendChild(accBtn);
   accChallengesDisplay.appendChild(accChallengesDisplayTitle);
   accWrapper.append(accBanner, accSeparator, accChallengesDisplay);

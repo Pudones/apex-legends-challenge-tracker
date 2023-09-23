@@ -1,12 +1,23 @@
 :root {
   // Color variables to match the season color scheme more easily.
-  --button-main-color: #866550;
-  --button-main-color--lowOpacity: #86655080;
-  --button-secondary-color: #100c0a;
+  --button-main-color: rgb(106, 28, 28);
+  --button-main-color--lowOpacity: rgba(255, 0, 0, 0.7);
+  --button-secondary-color: rgba(0, 0, 0, 0.3);
+  // --button-main-color: #866550;
+  // --button-main-color--lowOpacity: #86655080;
+  // --button-secondary-color: #100c0a;
   
-  // The border on the buttons is a gradient that works like: colorX, colorY, colorX, so the variable below is name "first" and "third" to emphasize that.
-  --button-border-first-third-color: #ff6232;
-  --button-border-second-color: #ffbaa9;
 
+  // The border on the buttons is a gradient that works like: colorX, colorY, colorX, so the variable below is name "first" and "third" to emphasize that.
+  --button-border-first-third-color: #8b7c1c;
+  --button-border-second-color: #ebf0e9; 
+  // --button-border-first-third-color: #ff6232;
+  // --button-border-second-color: #ffbaa9;
+
+
+  
   --mainColor: #272f38;
+
+  --challengeCardBG: rgb(53, 53, 70);
+  --challengeCardBorder: rgba(255, 255, 255, 0.3);
 }

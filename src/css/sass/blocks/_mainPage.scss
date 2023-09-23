@@ -15,6 +15,11 @@
     min-height: calc(100vh - 85px);
   }
 
+  h2 {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
   .no-challenges-text {
     font-size: 2.5rem;
   }
@@ -50,15 +55,17 @@
 
   .challenges-created {
     position: relative;
-    background: rgba(60, 60, 103);
+    border: 1px solid var(--challengeCardBorder);
+    background-color: var(--challengeCardBG);
     font-size: 1.5rem;
     width: 100%;
-    padding: 20px;
+    padding: 1.25rem;
+    // background: rgba(60, 60, 103); // DEBUG
   }
 
   .challenges--legends, .challenges--weapons {
     @include u.flexCenter--column;
-    gap: 10px;
+    gap: 0.625rem; // 10px
     width: 100%;
     max-width: 700px;
   }
@@ -73,8 +80,8 @@
 
 .challenges-created-complete-btn, .challenges-created-delete {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   border: none;
   z-index: 1;
 }

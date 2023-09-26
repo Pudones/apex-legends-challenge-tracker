@@ -145,6 +145,7 @@
         .optimize-challenge-card {
           position: relative;
           border: 1px solid var(--challengeCardBorder);
+          border-radius: 5px;
           background-color: var(--challengeCardBG);
           font-size: 1.5rem;
           padding: 1.25rem;

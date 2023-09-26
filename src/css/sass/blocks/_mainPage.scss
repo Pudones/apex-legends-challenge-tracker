@@ -12,7 +12,7 @@
   // background: rgba(42, 123, 48, 0.316); 
 
   @include u.forDesktop {
-    min-height: calc(100vh - 85px);
+    min-height: calc(100vh - 100px);
   }
 
   h2 {
@@ -54,16 +54,28 @@
   }
 
   .challenges-created {
+    // background: rgba(60, 60, 103); // DEBUG
     position: relative;
     border: 1px solid var(--challengeCardBorder);
+    border-radius: 5px;
     background-color: var(--challengeCardBG);
     font-size: 1.5rem;
     width: 100%;
     padding: 1.25rem;
-    // background: rgba(60, 60, 103); // DEBUG
+    left: 0;
+    transition: transform 1s ease-in;
+
+    .challenges-created-text {
+      letter-spacing: .125px;
+    }
   }
 
-  .challenges--legends, .challenges--weapons {
+  .challenges-created--deleting {
+    transform: translateX(-100vw);
+  }
+
+  .challenges--legends,
+  .challenges--weapons {
     @include u.flexCenter--column;
     gap: 0.625rem; // 10px
     width: 100%;
@@ -78,7 +90,12 @@
   inset: 0;
 }
 
-.challenges-created-complete-btn, .challenges-created-delete {
+.challenges-created-border--completed.challenges-created-border--completed {
+  border-color: green;
+}
+
+.challenges-created-complete-btn,
+.challenges-created-delete {
   position: absolute;
   width: 1.25rem;
   height: 1.25rem;
@@ -89,11 +106,15 @@
 .challenges-created-complete-btn {
   left: 0;
   bottom: 0;
-  background: green;
+  background-color: rgb(2, 112, 2);
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .challenges-created-delete {
   right: 0;
   bottom: 0;
-  background: rgb(148, 27, 27);
+  background-color: rgb(128, 17, 17);
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
 }

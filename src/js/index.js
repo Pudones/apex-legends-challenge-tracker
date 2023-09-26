@@ -2,6 +2,8 @@
 const bodyElement = document.body;
 const nav = document.querySelector(".nav");
 const challengeToolboxWrapper = document.querySelector(".challenges-toolbox-wrapper");
+const warningWindow = document.querySelector(".warning-window");
+
 const createChallengeOverlay = document.querySelector(".create-challenge-overlay");
 const challengeSubtypesWrapper = document.querySelector(".pick-challenge-subtype");
 const challengeSubtypesNode = document.querySelectorAll(".challenge-subtypes");
@@ -15,8 +17,10 @@ const createdChallengesWeapons = document.querySelector(".challenges--weapons");
 const challengePreview = document.querySelector(".challenge-preview");
 const challengePreviewText = document.querySelector(".challenge-preview-text");
 const challengesCreated = document.getElementsByClassName("challenges-created");
+const createChallengeActions = document.querySelector(".pick-challenge-actions");
+const challengeCreationSuccessDisplay = document.querySelector(".create-challenge-success");
+
 const optimizeOverlay = document.querySelector(".optimize-challenge-overlay");
-const warningWindow = document.querySelector(".warning-window");
 const optimizeChallengesContainer = document.querySelector(".optimize-challenge-overlay-container");
 
 // Inputs
@@ -31,6 +35,8 @@ const topBar = document.querySelector(".top-bar");
 const midBar = document.querySelector(".middle-bar");
 const bottomBar = document.querySelector(".bottom-bar");
 
+const scrollToTopElement = document.querySelector(".scroll-top");
+
 const blurOverlay = document.querySelector(".blur-overlay");
 
 const confirmationOverlay = document.querySelector(".confirmation-overlay");
@@ -42,15 +48,16 @@ const challengeDeleteCompletedBtn = document.querySelector(".challenges-delete-c
 const challengeDeleteAllBtn = document.querySelector(".challenges-delete-all");
 const headerNavButton = document.querySelector(".header-button");
 const createChallengeButton = document.querySelector(".create-challenges-button-header");
-const navChallengesLink = document.querySelector("#nav-link--challenges");
 const challengeToolboxBtn = document.querySelector(".challenges-toolbox");
+const navChallengesLink = document.querySelector("#nav-link--challenges");
 
 const navChallengesOptimize = document.querySelector("#nav-link--optimize");
 const optimizeChallengeBackBtn = document.querySelector(".optimize-challenge-back-btn");
+const optimizerAccordionBtns = document.getElementsByClassName("optimize-challenge-accordion-title");
+const optimizerAccordionOption = document.getElementsByClassName("optimize-challenge-option--acordion");
+
 const warningTextTop = document.querySelector(".warning-text-top");
 const warningTextBottom = document.querySelector(".warning-text-bottom");
-const textInputOfOptimizedChallenge = document.querySelector(".optimize-challenge-title");
-const optimizeBanner = document.querySelector(".optimize-challenge-banner");
 
 const createChallengeTextLink = document.querySelector(".create-challenge-link");
 const createChallengeBackBtn = document.querySelector(".create-challenge-back-btn");
@@ -60,7 +67,7 @@ const submit = document.querySelector(".pick-challenge-submit");
 let selectedItemsArray = [];
 let selectedItem;
 let challengeTypeSelected;
-let challengeSubtypeVar;
+let challengeSubtypeSelected;
 let isNavOpen;
 
 // Arrays
@@ -129,171 +136,9 @@ const weaponsImages = {
   red: './assets/images/icons/weaponClasses/red.svg'
 };
 
-// Along the code, some conditionals will refer as type 1 and 2.
-// The numbers mean: 1. Legends - 2. Weapons
+// Functions
 
-headerNavButton.addEventListener("click", () => {
-  if (isNavOpen) {
-    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-    nav.classList.remove("nav--opened");
-    isNavOpen = false;
-    bodyElement.classList.remove("no-scroll");
-    return;
-  }
-
-  navButtonBars.forEach(el => el.classList.add("bar-animation"));
-  nav.classList.add("nav--opened");
-  isNavOpen = true;
-  bodyElement.classList.add("no-scroll");
-});
-
-
-// The next 3 events does the same: Open the challenge creation.
-// 1. The + button on the mobile header.
-// 2. The button link of the header (Desktop and Mobile)
-// 3. The text-link that appears when there's no challenges created. It's not a good practice to present a problem to the user without a solution.
-createChallengeButton.addEventListener("click", () => {
-  createChallengeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
-  submit.classList.remove("block");
-
-  setTimeout(() => {
-    createChallengeOverlay.removeAttribute("style");
-    createChallengeOverlay.classList.add("create-challenge-overlay--active");
-    document.body.classList.remove("no-scroll");
-  }, 550);
-});
-
-navChallengesLink.addEventListener("click", () => {
-  nav.classList.remove("nav--opened");
-  isNavOpen = false;
-
-  createChallengeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
-  submit.classList.remove("block");
-
-  setTimeout(() => {
-    createChallengeOverlay.removeAttribute("style");
-    createChallengeOverlay.classList.add("create-challenge-overlay--active");
-    bodyElement.classList.add("no-scroll");
-  }, 550);
-});
-
-createChallengeTextLink.addEventListener("click", () => {
-  createChallengeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
-  submit.classList.remove("block");
-
-  setTimeout(() => {
-    createChallengeOverlay.removeAttribute("style");
-    createChallengeOverlay.classList.add("create-challenge-overlay--active");
-    document.body.classList.remove("no-scroll");
-  }, 550);
-});
-
-createChallengeBackBtn.addEventListener("click", () => {
-  selectedItemsArray = [];
-  selectedItem = null;
-
-  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-
-  uncheckAll(checkboxesArr);
-  resetContentVisibility(divsArr);
-  createChallengeOverlay.classList.remove("create-challenge-overlay--active");
-
-  addNoneClass(challengePreview);
-
-  bodyElement.classList.remove("no-scroll");
-
-  setTimeout(() => {
-    blurOverlay.classList.remove("blur-overlay--active");
-  }, 500);
-
-  checkChallengesCreatedState();
-});
-
-challengeToolboxBtn.addEventListener("click", () => challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active"));
-
-challengeDeleteAllBtn.addEventListener("click", () => {
-
-  if (challengesCreated.length < 1) {
-    challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
-    showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
-    return;
-  }
-
-  removeNoneClass(confirmationOverlay);
-  confirmationActionText.textContent = "Do you really want to delete ALL challenges?";
-
-  confirmationYesBtn.onclick = () => {
-    Array.from(challengesCreated).forEach(el => {
-      el.remove();
-      saveChallenges();
-      checkChallengesCreatedState();
-      addNoneClass(confirmationOverlay);
-    });
-  }
-
-  confirmationNoBtn.onclick = () => {
-    addNoneClass(confirmationOverlay);
-  }
-
-  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
-
-});
-
-challengeDeleteCompletedBtn.addEventListener("click", () => {
-  const completeChallenges = [];
-
-  if (challengesCreated.length < 1) {
-    challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
-    showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
-    return;
-  }
-
-  Array.from(challengesCreated).forEach(el => {
-    if (el.getAttribute("challengecomplete") === "true") completeChallenges.push(el);
-  });
-
-  if (completeChallenges.length > 0) {
-    for (challenge of completeChallenges) {
-      challenge.remove();
-      saveChallenges();
-      checkChallengesCreatedState();
-    }
-  } else {
-    showWarningWindow("Can't delete challenges.", "(All challenges are incomplete.)");
-  }
-
-  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
-  return;
-});
-
-const optimizerAccordionBtns = document.getElementsByClassName("optimize-challenge-accordion-title");
-const optimizerAccordionOption = document.getElementsByClassName("optimize-challenge-option--acordion");
-
-const clearElements = elementsArr => {
-  Array.from(elementsArr).forEach(el => {
-    el.remove();
-  });
-};
-
-navChallengesOptimize.addEventListener("click", () => {
-  optimizeChallenges();
-  bodyElement.classList.add("no-scroll");
-});
-
-optimizeChallengeBackBtn.addEventListener("click", () => {
-  clearElements(optimizerAccordionBtns);
-  clearElements(optimizerAccordionOption);
-
-  bodyElement.classList.remove("no-scroll");
-  optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
-
-  setTimeout(() => {
-    blurOverlay.classList.remove("blur-overlay--active");
-  }, 500);
-});
+const smoothScrollTop = block => block.scrollTo({top: 0, behavior: "smooth"});
 
 const toggleBorder = el => el.classList.toggle("--borderGreen");
 
@@ -308,6 +153,12 @@ const addNoneClass = content => content.classList.add("none");
 const addMultipleNoneClass = arr => arr.forEach(el => el.classList.add("none"));
 
 const removeNoneClass = content => content.classList.remove("none");
+
+const clearElements = elementsArr => {
+  Array.from(elementsArr).forEach(el => {
+    el.remove();
+  });
+};
 
 const resetContentVisibility = arr => {
   for (el of arr) el.classList.remove("flex");
@@ -389,7 +240,7 @@ const formatWeaponName = weapon => {
 };
 
 const generateChallengeText = () => {
-  const subtype = formatSubtypeText(challengeSubtypeVar);
+  const subtype = formatSubtypeText(challengeSubtypeSelected);
 
   // 1. Legends | 2. Weapons
 
@@ -409,7 +260,7 @@ const generateChallengeText = () => {
 };
 
 const handlePreview = () => {
-  const previewSubtype = formatSubtypeText(challengeSubtypeVar);
+  const previewSubtype = formatSubtypeText(challengeSubtypeSelected);
 
   if (challengeTypeSelected === 1) {
     if (selectedItemsArray.length === 0)
@@ -441,8 +292,6 @@ function handleSelection() {
 
     handlePreview();
 
-    submit.classList.add("block");
-    submit.scrollIntoView({ behavior: "smooth" });
     // console.log("Weapon Selection:");
     // console.log(selectedItem);
     return;
@@ -467,12 +316,6 @@ function handleSelection() {
   selectedItemsArray.push(this);
 
   handlePreview();
-
-  // After 3 elements are selected, scroll to the Submit Button.
-  if (selectedItemsArray.length === 3) {
-    submit.classList.add("block");
-    submit.scrollIntoView({ behavior: "smooth" });
-  }
 };
 
 const createChallengeCard = challenge => {
@@ -490,6 +333,7 @@ const createChallengeCard = challenge => {
     const elementParent = el.target.parentNode;
     const elementCompleteOverlay = el.target.nextElementSibling;
 
+    elementParent.classList.toggle("challenges-created-border--completed");
 
     if (elementParent.getAttribute("challengecomplete") === "true") {
       elementParent.setAttribute("challengecomplete", "false");
@@ -525,11 +369,15 @@ const createChallengeCard = challenge => {
     bodyElement.classList.add("no-scroll");
 
     confirmationYesBtn.onclick = () => {
-      element.remove();
-      saveChallenges();
-      checkChallengesCreatedState();
+      element.classList.add("challenges-created--deleting");
       addNoneClass(confirmationOverlay);
-      bodyElement.classList.remove("no-scroll");
+
+      setTimeout(() => {
+        element.remove();
+        saveChallenges();
+        checkChallengesCreatedState();
+        bodyElement.classList.remove("no-scroll");
+      }, 1200);
     }
 
     confirmationNoBtn.onclick = () => {
@@ -626,7 +474,7 @@ const optimizeChallenges = () => {
     }
   });
 
-  challengeArrObj.sort(({challOccurr: a}, {challOccurr: b}) => b - a);
+  challengeArrObj.sort(({ challOccurr: a }, { challOccurr: b }) => b - a);
 
   challengeArrObj.forEach(el => createOptimizerAccordion(el.challName, el.challOccurr, eligibleChallenges));
 
@@ -769,6 +617,10 @@ const checkChallengesCreatedState = () => {
   } else {
     const challengeCreatedLastIndex = challengesCreated.length - 1;
 
+    Array.from(challengesCreated).forEach(el => {
+      if (el.getAttribute("challengecomplete") === "true") el.classList.add("challenges-created-border--completed");
+    });
+
     Array.from(challengesCreated).forEach(el => el.classList.remove("mb85"));
     challengesCreated[challengeCreatedLastIndex].classList.add("mb85");
 
@@ -781,7 +633,7 @@ const checkChallengesCreatedState = () => {
   }
 };
 
-// IIFE that will retrieve all the challenges and it's state previously created (if there's any).
+// Retrieve all the challenges (if any exist) and it's previous state when created.
 (() => {
   const retrievedChallenges = JSON.parse(localStorage.getItem("apexChallengesJSON"));
   const retrievedChallengesState = JSON.parse(localStorage.getItem("apexChallengesStateJSON"));
@@ -800,11 +652,162 @@ const checkChallengesCreatedState = () => {
   })
 })();
 
-/*
-  The methodology behind the logic of the Event Listeners below, is that every time a element will be executed as an argument to a function, first, we gotta reset the previous state so it will be "clean" before receiving the new stuff.
-*/
+// Events
 
-// 1.
+headerNavButton.addEventListener("click", () => {
+  if (isNavOpen) {
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+    nav.classList.remove("nav--opened");
+    isNavOpen = false;
+    bodyElement.classList.remove("no-scroll");
+    return;
+  }
+
+  navButtonBars.forEach(el => el.classList.add("bar-animation"));
+  nav.classList.add("nav--opened");
+  isNavOpen = true;
+  bodyElement.classList.add("no-scroll");
+});
+
+// The next 3 events does the same: Open the challenge creation.
+// 1. The + button on the mobile header.
+// 2. The button link of the header (Desktop and Mobile)
+// 3. The text-link that appears when there's no challenges created. It's not a good practice to present a problem to the user without a solution.
+createChallengeButton.addEventListener("click", () => {
+  createChallengeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
+
+  setTimeout(() => {
+    createChallengeOverlay.removeAttribute("style");
+    createChallengeOverlay.classList.add("create-challenge-overlay--active");
+    bodyElement.classList.add("no-scroll");
+    createChallengeActions.classList.add("pick-challenge-actions--active");
+  }, 550);
+});
+
+navChallengesLink.addEventListener("click", () => {
+  nav.classList.remove("nav--opened");
+  isNavOpen = false;
+
+  createChallengeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
+
+  setTimeout(() => {
+    createChallengeOverlay.removeAttribute("style");
+    createChallengeOverlay.classList.add("create-challenge-overlay--active");
+    bodyElement.classList.add("no-scroll");
+    createChallengeActions.classList.add("pick-challenge-actions--active");
+  }, 550);
+});
+
+createChallengeTextLink.addEventListener("click", () => {
+  createChallengeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
+
+  setTimeout(() => {
+    createChallengeOverlay.removeAttribute("style");
+    createChallengeOverlay.classList.add("create-challenge-overlay--active");
+    bodyElement.classList.add("no-scroll");
+    createChallengeActions.classList.add("pick-challenge-actions--active");
+  }, 550);
+});
+
+createChallengeBackBtn.addEventListener("click", () => {
+  selectedItemsArray = [];
+  selectedItem = null;
+
+  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+
+  uncheckAll(checkboxesArr);
+  resetContentVisibility(divsArr);
+  createChallengeOverlay.classList.remove("create-challenge-overlay--active");
+
+  addNoneClass(challengePreview);
+  createChallengeActions.classList.remove("pick-challenge-actions--active");
+
+  bodyElement.classList.remove("no-scroll");
+
+  setTimeout(() => {
+    blurOverlay.classList.remove("blur-overlay--active");
+  }, 500);
+
+  checkChallengesCreatedState();
+});
+
+scrollToTopElement.addEventListener("click", smoothScrollTop.bind(null, createChallengeOverlay));
+
+challengeToolboxBtn.addEventListener("click", () => challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active"));
+
+challengeDeleteAllBtn.addEventListener("click", () => {
+
+  if (challengesCreated.length < 1) {
+    challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+    showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
+    return;
+  }
+
+  removeNoneClass(confirmationOverlay);
+  confirmationActionText.textContent = "Do you really want to delete ALL challenges?";
+
+  confirmationYesBtn.onclick = () => {
+    Array.from(challengesCreated).forEach(el => {
+      el.remove();
+      saveChallenges();
+      checkChallengesCreatedState();
+      addNoneClass(confirmationOverlay);
+    });
+  }
+
+  confirmationNoBtn.onclick = () => {
+    addNoneClass(confirmationOverlay);
+  }
+
+  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+
+});
+
+challengeDeleteCompletedBtn.addEventListener("click", () => {
+  const completeChallenges = [];
+
+  if (challengesCreated.length < 1) {
+    challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+    showWarningWindow("Can't delete challenges.", "(Try creating some challenges!)");
+    return;
+  }
+
+  Array.from(challengesCreated).forEach(el => {
+    if (el.getAttribute("challengecomplete") === "true") completeChallenges.push(el);
+  });
+
+  if (completeChallenges.length > 0) {
+    for (challenge of completeChallenges) {
+      challenge.remove();
+      saveChallenges();
+      checkChallengesCreatedState();
+    }
+  } else {
+    showWarningWindow("Can't delete challenges.", "(All challenges are incomplete.)");
+  }
+
+  challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active");
+  return;
+});
+
+navChallengesOptimize.addEventListener("click", optimizeChallenges);
+
+optimizeChallengeBackBtn.addEventListener("click", () => {
+  clearElements(optimizerAccordionBtns);
+  clearElements(optimizerAccordionOption);
+
+  bodyElement.classList.remove("no-scroll");
+  optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
+  checkChallengesCreatedState();
+
+  setTimeout(() => {
+    blurOverlay.classList.remove("blur-overlay--active");
+  }, 500);
+});
+
 challengeTypeInput.forEach(el => el.addEventListener("change", el => {
   const typeInput = el.target;
   const borderElement = typeInput.nextElementSibling.children[1];
@@ -836,12 +839,11 @@ challengeTypeInput.forEach(el => el.addEventListener("change", el => {
   challengeSubtypesWrapper.scrollIntoView({ behavior: "smooth" });
 }));
 
-// 2.
 challengeSubtypeInput.forEach(el => el.addEventListener("change", el => {
   const subtypeInput = el.target;
   const borderElement = subtypeInput.nextElementSibling.children[1];
 
-  challengeSubtypeVar = subtypeInput;
+  challengeSubtypeSelected = subtypeInput;
 
   removeNoneClass(challengePreview);
   resetBorder(challengeSubtypeInput);
@@ -860,12 +862,8 @@ challengeSubtypeInput.forEach(el => el.addEventListener("change", el => {
   }
 }));
 
-// 3
 legendsInput.forEach(el => el.addEventListener("change", handleSelection));
-
 weaponsInput.forEach(el => el.addEventListener("change", handleSelection));
-
-const challengeCreationSuccessDisplay = document.querySelector(".create-challenge-success");
 
 submit.addEventListener("click", () => {
   const challengeText = generateChallengeText();
@@ -873,7 +871,8 @@ submit.addEventListener("click", () => {
   saveChallenges();
 
   addNoneClass(challengePreview);
-  challengeCreationSuccessDisplay.classList.toggle("create-challenge-success--active");
+  createChallengeActions.classList.remove("pick-challenge-actions--active");
+  challengeCreationSuccessDisplay.classList.add("create-challenge-success--active");
   bodyElement.classList.remove("no-scroll");
 
   // Resets after the user creates the challenge
@@ -885,7 +884,7 @@ submit.addEventListener("click", () => {
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
   }, 500);
 
-  setTimeout(() => challengeCreationSuccessDisplay.classList.toggle("create-challenge-success--active"), 2000);
+  setTimeout(() => challengeCreationSuccessDisplay.classList.remove("create-challenge-success--active"), 2000);
 
   checkChallengesCreatedState();
 });

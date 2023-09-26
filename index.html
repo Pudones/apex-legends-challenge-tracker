@@ -10,6 +10,7 @@
   <script defer src="./src/js/index.js"></script>
   <link rel="shortcut icon" href="./assets/images/icons/favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="manifest" href="./app.webmanifest">
 </head>
 
 <body>
@@ -25,10 +26,6 @@
   </div>
 
   <div class="create-challenge-overlay">
-
-    <button class="create-challenge-back-btn">
-      <img src="./assets/images/icons/arrow_back.svg" alt="Back Arrow">
-    </button>
 
     <div class="challenge-preview none">
       <p class="challenge-preview-text"></p>
@@ -53,7 +50,7 @@
 
     </div>
 
-    <div class="pick-challenge-subtype">
+    <div class="pick-challenge-subtype mb80">
 
       <h2 class="text-center">Pick challenge subtype:</h2>
 
@@ -101,7 +98,7 @@
 
     </div>
 
-    <div class="pick-challenge-legends">
+    <div class="pick-challenge-legends mb80">
       <input type="checkbox" name="ash" id="ash">
       <label for="ash">
         <h2>Ash</h2>
@@ -247,7 +244,7 @@
       </label>
     </div>
 
-    <div class="pick-challenge-weapons">
+    <div class="pick-challenge-weapons mb80">
       <input type="radio" name="pick-challenge-radio-name" id="assault">
       <label for="assault">
         <h2>Assault Rifles</h2>
@@ -297,7 +294,25 @@
       </label>
     </div>
 
-    <button class="pick-challenge-submit">Create Challenge</button>
+    <div class="pick-challenge-actions">
+
+      <div class="pick-challenge-actions-container">
+
+        <button class="create-challenge-back-btn back-arrow-button">
+          <img src="./assets/images/icons/arrow_back.svg" alt="Back Arrow">
+        </button>
+
+        <button class="pick-challenge-submit">Create</button>
+
+        <button class="create-challenge-scroll-top-btn scroll-top up-arrow-button">
+          <img src="./assets/images/icons/arrow_up.svg" alt="Up Arrow">
+        </button>
+        
+      </div>
+
+    </div>
+
+
 
     <div class="create-challenge-success">
       <h3 class="text-center">Challenge Succesfully Created!</h3>
@@ -307,7 +322,7 @@
 
   <div class="optimize-challenge-overlay">
 
-    <button class="optimize-challenge-back-btn">
+    <button class="optimize-challenge-back-btn back-arrow-button">
       <img src="./assets/images/icons/arrow_back.svg" alt="Back to home">
     </button>
 
@@ -397,6 +412,14 @@
 
       <div class="challenges--legends">
         <h2>Legends Challenges</h2>
+
+        <!-- <div class="challenges-created challenges-created--deleting" challengecomplete="false">
+          <button class="challenges-created-complete-btn"></button>
+          <div class="challenges-created--completed none">CHALLENGE COMPLETED</div>
+          <button class="challenges-created-delete"></button>
+          <p class="challenges-created-text">Play ceholder.</p>
+        </div> -->
+
       </div>
 
       <div class="challenges--weapons mt50">

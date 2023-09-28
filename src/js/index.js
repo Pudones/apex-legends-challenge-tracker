@@ -671,7 +671,7 @@ headerNavButton.addEventListener("click", () => {
 // 3. The text-link that appears when there's no challenges created. It's not a good practice to present a problem to the user without a solution.
 createChallengeButton.addEventListener("click", () => {
   createChallengeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
+  // blurOverlay.classList.add("blur-overlay--active");
 
   setTimeout(() => {
     createChallengeOverlay.removeAttribute("style");
@@ -686,7 +686,7 @@ navChallengesLink.addEventListener("click", () => {
   isNavOpen = false;
 
   createChallengeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
+  // blurOverlay.classList.add("blur-overlay--active");
 
   setTimeout(() => {
     createChallengeOverlay.removeAttribute("style");
@@ -698,7 +698,7 @@ navChallengesLink.addEventListener("click", () => {
 
 createChallengeTextLink.addEventListener("click", () => {
   createChallengeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
+  // blurOverlay.classList.add("blur-overlay--active");
 
   setTimeout(() => {
     createChallengeOverlay.removeAttribute("style");
@@ -723,9 +723,9 @@ createChallengeBackBtn.addEventListener("click", () => {
 
   bodyElement.classList.remove("no-scroll");
 
-  setTimeout(() => {
-    blurOverlay.classList.remove("blur-overlay--active");
-  }, 500);
+  // setTimeout(() => {
+  //   blurOverlay.classList.remove("blur-overlay--active");
+  // }, 500);
 
   resetBorder(legendsLabel);
   resetBorder(weaponsLabel);
@@ -881,7 +881,7 @@ submit.addEventListener("click", () => {
 
   // Resets after the user creates the challenge
   setTimeout(() => {
-    blurOverlay.classList.remove("blur-overlay--active");
+    // blurOverlay.classList.remove("blur-overlay--active");
     createChallengeOverlay.classList.remove("create-challenge-overlay--active");
     uncheckAll(checkboxesArr);
     resetContentVisibility(divsArr);

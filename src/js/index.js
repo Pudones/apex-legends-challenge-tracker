@@ -28,6 +28,8 @@ const challengeTypeInput = document.querySelectorAll(".challenge-types input");
 const challengeSubtypeInput = document.querySelectorAll(".challenge-subtypes input");
 const legendsInput = document.querySelectorAll(".pick-challenge-legends input");
 const weaponsInput = document.querySelectorAll(".pick-challenge-weapons input");
+const legendsLabel = document.querySelectorAll(".pick-challenge-legends label");
+const weaponsLabel = document.querySelectorAll(".pick-challenge-weapons label");
 
 // Elements, Validations, Control Variables and other stuff
 // These are the bars from the Navigation Button (some transitions will be applied on them)
@@ -138,12 +140,12 @@ const weaponsImages = {
 
 // Functions
 
-const smoothScrollTop = block => block.scrollTo({top: 0, behavior: "smooth"});
+const smoothScrollTop = block => block.scrollTo({ top: 0, behavior: "smooth" });
 
-const toggleBorder = el => el.classList.toggle("--borderGreen");
+const toggleBorder = el => el.classList.toggle("pick-challenge--selected");
 
-const resetBorder = arr => {
-  for (el of arr) el.nextElementSibling.children[1].classList.remove("--borderGreen");
+const resetBorder = arr => { 
+  for (el of arr) el.classList.remove("pick-challenge--selected");
 };
 
 const showContent = content => content.classList.add("flex");
@@ -167,7 +169,6 @@ const resetContentVisibility = arr => {
 const uncheckAll = arr => {
   for (member of arr) {
     for (el of member) {
-      el.nextElementSibling.children[1].classList.remove("--borderGreen");
       el.checked = false;
     }
   }
@@ -184,7 +185,6 @@ const checkBiggestOccurrence = (arr, arrLength) => {
     if (alreadyUsed.includes(arr[i])) continue;
 
     for (let j = 0; j < arrLength; j++) if (arr[i] === arr[j]) count++;
-
     // console.log(arr[i], count);
 
     alreadyUsed.push(arr[i]);
@@ -282,18 +282,15 @@ const handlePreview = () => {
 };
 
 function handleSelection() {
-  const borderElement = this.nextElementSibling.children[1];
+  const borderElement = this.nextElementSibling;
 
   if (challengeTypeSelected === 2) {
-    resetBorder(weaponsInput);
-
+    resetBorder(weaponsLabel);
     toggleBorder(borderElement);
     selectedItem = this;
-
-    handlePreview();
-
     // console.log("Weapon Selection:");
     // console.log(selectedItem);
+    handlePreview();
     return;
   }
 
@@ -314,7 +311,6 @@ function handleSelection() {
 
   toggleBorder(borderElement);
   selectedItemsArray.push(this);
-
   handlePreview();
 };
 
@@ -393,109 +389,6 @@ const createChallengeCard = challenge => {
   if (challengeTypeSelected === 2) return createdChallengesWeapons.appendChild(challengeDiv);
 };
 
-const optimizeChallenges = () => {
-  const accordionHeights = [];
-  const challengeOccurrenceArray = [];
-  const eligibleChallenges = Array.from(challengesCreated).filter(el => {
-    if (el.getAttribute("challengecomplete") === "false") return el;
-  });
-
-  clearElements(optimizerAccordionBtns);
-  clearElements(optimizerAccordionOption);
-
-  // If there's ONE or ZERO challenges:
-  if (eligibleChallenges.length < 2) {
-    bodyElement.classList.remove("no-scroll");
-    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
-    setTimeout(() => {
-      blurOverlay.classList.remove("blur-overlay--active");
-    }, 500);
-
-    nav.classList.remove("nav--opened");
-    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-    isNavOpen = false;
-
-    if (eligibleChallenges.length === 0) showWarningWindow("Can't optimize challenges.", "(There's no challenges to optimize.)");
-    if (eligibleChallenges.length === 1) showWarningWindow("Can't optimize challenges.", "(Only one challenge exists.)");
-
-    return;
-  }
-
-  for (el of eligibleChallenges) {
-    let challengeText = el.children[3].textContent;
-
-    challengeText = challengeText.replace(/[^a-zA-Z]+/g, ' ').split(" ");
-
-    challengeText.forEach(el => {
-      if (filterChallengesArray.includes(el)) return;
-      challengeOccurrenceArray.push(el);
-    });
-  }
-
-  const filteredOccurrenceArrs = checkBiggestOccurrence(challengeOccurrenceArray, challengeOccurrenceArray.length);
-
-  if (filteredOccurrenceArrs === "noElementGreaterThanOne") {
-    nav.classList.remove("nav--opened");
-    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-    isNavOpen = false;
-
-    blurOverlay.classList.remove("blur-overlay--active");
-    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
-    showWarningWindow("Can't optimize challenges.", "(Maybe all challenges are different?)");
-    return;
-  }
-
-  nav.classList.remove("nav--opened");
-  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-  isNavOpen = false;
-
-  optimizeOverlay.style.top = "0";
-  blurOverlay.classList.add("blur-overlay--active");
-
-  setTimeout(() => {
-    optimizeOverlay.removeAttribute("style");
-    optimizeOverlay.classList.add("optimize-challenge-overlay--active");
-  }, 500);
-
-  const filteredOccurrenceNames = filteredOccurrenceArrs[0];
-  const filteredOccurenceNumber = filteredOccurrenceArrs[1];
-
-  const challengeArrObj = [];
-
-  filteredOccurrenceNames.forEach((el, i) => {
-    if (filteredOccurenceNumber[i] > 1) {
-
-      const challengeObject = {
-        challName: el,
-        challOccurr: filteredOccurenceNumber[i]
-      }
-
-      challengeArrObj.push(challengeObject);
-    }
-  });
-
-  challengeArrObj.sort(({ challOccurr: a }, { challOccurr: b }) => b - a);
-
-  challengeArrObj.forEach(el => createOptimizerAccordion(el.challName, el.challOccurr, eligibleChallenges));
-
-  // This will get the height of each accordion to calculate how many max-height they will need.
-  Array.from(optimizerAccordionBtns).forEach(el => accordionHeights.push(el.nextElementSibling.offsetHeight));
-
-  Array.from(optimizerAccordionBtns).forEach((el, index) => {
-    const accordionPanel = el.nextElementSibling;
-    accordionPanel.style.maxHeight = 0;
-
-    el.addEventListener("click", () => {
-      if (accordionPanel.style.maxHeight === "0px") {
-        accordionPanel.style.maxHeight = accordionHeights[index] + "px";
-      }
-      else {
-        accordionPanel.style.maxHeight = "0";
-      }
-    });
-  });
-};
-
 const createOptimizerAccordion = (string, occurrence, eligibleArr) => {
   const accBtn = document.createElement("button");
   accBtn.classList.add("optimize-challenge-accordion-title", "mt30", "mb30");
@@ -568,6 +461,7 @@ const createOptimizerAccordion = (string, occurrence, eligibleArr) => {
         removeNoneClass(challengeCompleteOverlay);
         saveChallenges();
         optimizeChallenges();
+        checkChallengesCreatedState();
       }
 
       const challengeDeleteBtn = document.createElement("button");
@@ -585,6 +479,108 @@ const createOptimizerAccordion = (string, occurrence, eligibleArr) => {
       challengeCardDiv.append(challengeCompleteOverlay, challengeCompleteBtn, challengeDeleteBtn);
       accChallengesDisplay.appendChild(challengeCardDiv);
     }
+  });
+};
+
+const optimizeChallenges = () => {
+  const accordionHeights = [];
+  const challengeOccurrenceArray = [];
+  const eligibleChallenges = Array.from(challengesCreated).filter(el => {
+    if (el.getAttribute("challengecomplete") === "false") return el;
+  });
+
+  clearElements(optimizerAccordionBtns);
+  clearElements(optimizerAccordionOption);
+
+  // If there's ONE or ZERO challenges:
+  if (eligibleChallenges.length < 2) {
+    bodyElement.classList.remove("no-scroll");
+    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
+    setTimeout(() => {
+      blurOverlay.classList.remove("blur-overlay--active");
+    }, 500);
+
+    nav.classList.remove("nav--opened");
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+    isNavOpen = false;
+
+    if (eligibleChallenges.length === 0) showWarningWindow("Can't optimize challenges.", "(There's no challenges to optimize.)");
+    if (eligibleChallenges.length === 1) showWarningWindow("Can't optimize challenges.", "(Only one challenge exists.)");
+
+    return;
+  }
+
+  for (el of eligibleChallenges) {
+    let challengeText = el.children[3].textContent;
+    challengeText = challengeText.replace(/[^a-zA-Z]+/g, ' ').split(" ");
+    challengeText.forEach(el => {
+      if (filterChallengesArray.includes(el)) return;
+      challengeOccurrenceArray.push(el);
+    });
+  }
+
+  const filteredOccurrenceArrs = checkBiggestOccurrence(challengeOccurrenceArray, challengeOccurrenceArray.length);
+
+  // If all challenges are different:
+  if (filteredOccurrenceArrs === "noElementGreaterThanOne") {
+    nav.classList.remove("nav--opened");
+    navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+    isNavOpen = false;
+
+    blurOverlay.classList.remove("blur-overlay--active");
+    optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
+    showWarningWindow("Can't optimize challenges.", "(Maybe all challenges are different?)");
+    return;
+  }
+
+  nav.classList.remove("nav--opened");
+  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
+  isNavOpen = false;
+
+  optimizeOverlay.style.top = "0";
+  blurOverlay.classList.add("blur-overlay--active");
+
+  setTimeout(() => {
+    optimizeOverlay.removeAttribute("style");
+    optimizeOverlay.classList.add("optimize-challenge-overlay--active");
+  }, 500);
+
+  const filteredOccurrenceNames = filteredOccurrenceArrs[0];
+  const filteredOccurenceNumber = filteredOccurrenceArrs[1];
+
+  const challengeArrObj = [];
+
+  filteredOccurrenceNames.forEach((el, i) => {
+    if (filteredOccurenceNumber[i] > 1) {
+
+      const challengeObject = {
+        challName: el,
+        challOccurr: filteredOccurenceNumber[i]
+      }
+
+      challengeArrObj.push(challengeObject);
+    }
+  });
+
+  challengeArrObj.sort(({ challOccurr: a }, { challOccurr: b }) => b - a);
+
+  challengeArrObj.forEach(el => createOptimizerAccordion(el.challName, el.challOccurr, eligibleChallenges));
+
+  // This will get the height of each accordion to calculate how many max-height they will need.
+  Array.from(optimizerAccordionBtns).forEach(el => accordionHeights.push(el.nextElementSibling.offsetHeight));
+
+  Array.from(optimizerAccordionBtns).forEach((el, index) => {
+    const accordionPanel = el.nextElementSibling;
+    accordionPanel.style.maxHeight = 0;
+
+    el.addEventListener("click", () => {
+      if (accordionPanel.style.maxHeight === "0px") {
+        accordionPanel.style.maxHeight = accordionHeights[index] + "px";
+      }
+      else {
+        accordionPanel.style.maxHeight = "0";
+      }
+    });
   });
 };
 
@@ -731,6 +727,9 @@ createChallengeBackBtn.addEventListener("click", () => {
     blurOverlay.classList.remove("blur-overlay--active");
   }, 500);
 
+  resetBorder(legendsLabel);
+  resetBorder(weaponsLabel);
+
   checkChallengesCreatedState();
 });
 
@@ -818,9 +817,14 @@ challengeTypeInput.forEach(el => el.addEventListener("change", el => {
   selectedItemsArray = [];
   selectedItem = null;
   uncheckAll(checkboxesArr);
+
   resetBorder(challengeTypeInput);
+  resetBorder(legendsLabel);
+  resetBorder(weaponsLabel);
+
   resetContentVisibility(challengeSubtypesNode);
   resetContentVisibility(picksArr);
+
   addNoneClass(challengePreview);
 
   toggleBorder(borderElement);
@@ -881,6 +885,8 @@ submit.addEventListener("click", () => {
     createChallengeOverlay.classList.remove("create-challenge-overlay--active");
     uncheckAll(checkboxesArr);
     resetContentVisibility(divsArr);
+    resetBorder(legendsLabel);
+    resetBorder(weaponsLabel);
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
   }, 500);
 

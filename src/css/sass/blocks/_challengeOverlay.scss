@@ -3,18 +3,13 @@
 .create-challenge-overlay {
   display: flex;
   flex-direction: column;
-
   position: absolute;
   top: -100%;
-
   background-color: #220505;
-
   min-width: 100%;
   min-height: 100%;
-
   z-index: 6;
   padding: 15px;
-
   transition: all .3s linear;
 
   .pick-challenge-type,
@@ -22,18 +17,111 @@
     @include u.flexCenter--column;
   }
 
-  label {
-    cursor: pointer;
-  }
-
   h2 {
-    font-size: 1.6rem;
-    margin-bottom: 25px;
     text-align: center;
   }
 
+  .pick-challenge-type label, .pick-challenge-subtype label, .pick-challenge-legends label, .pick-challenge-weapons label {
+    @include u.flexCenter--column;
+    margin-bottom: 50px;
+    overflow: hidden;
+    border: 3px solid transparent;
+    border-radius: 5px;
+    transition: border .3s;
+    user-select: none;
+    cursor: pointer;
+
+
+    @include u.forDesktop {
+      &:hover img {
+        transform: scale(1.25);
+      }
+    }
+
+    img, h2 {
+      pointer-events: none;
+    }
+
+    .label-image-wrapper {
+      @include u.flexCenter;
+      width: 100%;
+      flex: 1;
+    }
+
+    h2 {
+      @include u.flexCenter;
+      background-color: rgba(48, 6, 6, 0.6);
+      transition: background .3s;
+      padding: 10px;
+      width: 100%;
+      font-size: 1.5rem;
+      order: 2;
+      word-wrap: break-word;
+    }
+
+    img {
+      transition: transform .3s;
+      z-index: -1;
+    }
+  }
+
+  .pick-challenge-type label, .pick-challenge-subtype label {
+    width: 250px;
+    min-height: 250px;
+  }
+
+  .pick-challenge-type label img, .pick-challenge-subtype label img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .pick-challenge-legends label {
+    width: calc(50% - 5px);
+
+    @include u.forTablet {
+      width: calc(25% - 5px);
+    }
+
+    @include u.forDesktop {
+      width: 250px;
+    }
+
+    img {
+      width: 200px;
+
+      @include u.forDesktop {
+        width: 250px;
+      }
+    }
+  }
+
+  .pick-challenge-weapons label {
+    width: calc(50% - 5px);
+
+    @include u.forDesktop {
+      width: calc(25% - 5px);
+    }
+
+    img {
+      width: 100px;
+      height: 100px;
+
+      @include u.forDesktop {
+        width: 150px;
+        height: 150px;
+      }
+    }
+  }
+
+
+
   .pick-challenge-type {
     padding-top: 70px;
+
+    .pick-challenge-type-title {
+      font-size: 2rem;
+      margin-bottom: 50px;
+    }
 
     .challenge-types {
       @include u.flexCenter--column;
@@ -47,27 +135,17 @@
       input {
         display: none;
       }
-
-      label {
-        @include u.flexCenter--column;
-
-        h2 {
-          order: 2;
-        }
-
-        img {
-          width: 175px;
-          height: 175px;
-          border: 5px solid navy;
-          transition: .5s;
-        }
-      }
     }
   }
 
   .pick-challenge-subtype {
     display: none;
     padding-top: 70px;
+
+    .pick-challenge-subtype-title {
+      font-size: 2rem;
+      margin-bottom: 50px;
+    }
 
     .challenge-subtypes {
       @include u.flexCenter--column;
@@ -81,21 +159,6 @@
       input {
         display: none;
       }
-
-      label {
-        @include u.flexCenter--column;
-
-        h2 {
-          order: 2;
-        }
-
-        img {
-          width: 175px;
-          height: 175px;
-          border: 5px solid navy;
-          transition: .5s;
-        }
-      }
     }
 
     .challenge-subtypes--legends,
@@ -105,6 +168,8 @@
 
 
   }
+
+
 
   .pick-challenge-actions {
     position: fixed;
@@ -162,6 +227,8 @@
     bottom: 0;
   }
 
+
+
   .create-challenge-success {
     @include u.flexCenter--column;
     position: fixed;
@@ -200,11 +267,11 @@
 
 .pick-challenge-legends,
 .pick-challenge-weapons {
-  @include u.flexCenter;
-  flex-wrap: wrap;
   display: none;
+  justify-content: center;
+  flex-wrap: wrap;
   padding-top: 70px;
-  gap: 10px;
+  gap: 5px;
 
   @include u.forDesktop {
     max-width: 1700px;
@@ -214,88 +281,19 @@
   input {
     display: none;
   }
+}
 
-  label {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 50px;
-    backdrop-filter: blur(5px);
-    overflow: hidden;
-    border: 3px solid transparent;
-    transition: border .3s;
-    user-select: none;
+.pick-challenge--selected.pick-challenge--selected.pick-challenge--selected {
+  border: 3px solid rgba(4, 77, 4, 1);
+  border-radius: 5px;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
 
-    @include u.forDesktop {
-      &:hover img {
-        transform: translateY(10%) scale(1.15);
-      }
-    }
-
-    img, h2 {
-      pointer-events: none;
-    }
-
-    h2 {
-      background-color: rgba(48, 6, 6, 0.6);
-      transition: background .3s;
-      padding-block: 10px;
-      width: 100%;
-      font-size: 1.8rem;
-      margin: 0;
-      order: 2;
-      z-index: 10;
-    }
-
-    img {
-      height: 200px;
-      transform: translateY(10%);
-      transition: transform .3s;
-
-      @include u.forDesktop {
-        height: 300px;
-      }
-    }
-  }
-
-  // Modifier Class
-
-  .pick-challenge--selected {
-    border: 3px solid rgba(4, 77, 4, 1);
-    border-radius: 5px;
-    box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.6);
-  }
-
-  .pick-challenge--selected h2 {
+  h2 {
     background-color: rgba(4, 77, 4, 0.6);
   }
 
-  .pick-challenge--selected img {
+  img {
     transform: translateY(10%) scale(1.50);
   }
-}
-
-.pick-challenge-weapons label {
-
-  @include u.forDesktop {
-    justify-content: center;
-    align-items: center;
-    flex: 0 0 20%;
-  }
-
-}
-
-.pick-challenge-weapons img {
-  width: 300px;
-}
-
-
-
-
-
-
-
-// Modifier on selected elements.
-.--borderGreen.--borderGreen.--borderGreen.--borderGreen {
-  border-color: green;
-  transform: scale(0.9);
 }

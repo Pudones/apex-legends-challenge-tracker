@@ -28,6 +28,9 @@ const challengeTypeInput = document.querySelectorAll(".challenge-types input");
 const challengeSubtypeInput = document.querySelectorAll(".challenge-subtypes input");
 const legendsInput = document.querySelectorAll(".pick-challenge-legends input");
 const weaponsInput = document.querySelectorAll(".pick-challenge-weapons input");
+
+const challengeTypeLabel = document.querySelectorAll(".challenge-types label");
+const challengeSubtypeLabel = document.querySelectorAll(".challenge-subtypes label");
 const legendsLabel = document.querySelectorAll(".pick-challenge-legends label");
 const weaponsLabel = document.querySelectorAll(".pick-challenge-weapons label");
 
@@ -727,6 +730,8 @@ createChallengeBackBtn.addEventListener("click", () => {
   //   blurOverlay.classList.remove("blur-overlay--active");
   // }, 500);
 
+  resetBorder(challengeTypeLabel);
+  resetBorder(challengeSubtypeLabel);
   resetBorder(legendsLabel);
   resetBorder(weaponsLabel);
 
@@ -809,7 +814,7 @@ optimizeChallengeBackBtn.addEventListener("click", () => {
 
 challengeTypeInput.forEach(el => el.addEventListener("change", el => {
   const typeInput = el.target;
-  const borderElement = typeInput.nextElementSibling.children[1];
+  const borderElement = typeInput.nextElementSibling;
   const checkboxesArr = [challengeSubtypeInput, legendsInput, weaponsInput];
   const picksArr = [legendsPick, weaponsPick];
 
@@ -818,7 +823,8 @@ challengeTypeInput.forEach(el => el.addEventListener("change", el => {
   selectedItem = null;
   uncheckAll(checkboxesArr);
 
-  resetBorder(challengeTypeInput);
+  resetBorder(challengeTypeLabel);
+  resetBorder(challengeSubtypeLabel);
   resetBorder(legendsLabel);
   resetBorder(weaponsLabel);
 
@@ -845,12 +851,12 @@ challengeTypeInput.forEach(el => el.addEventListener("change", el => {
 
 challengeSubtypeInput.forEach(el => el.addEventListener("change", el => {
   const subtypeInput = el.target;
-  const borderElement = subtypeInput.nextElementSibling.children[1];
+  const borderElement = subtypeInput.nextElementSibling;
 
   challengeSubtypeSelected = subtypeInput;
 
   removeNoneClass(challengePreview);
-  resetBorder(challengeSubtypeInput);
+  resetBorder(challengeSubtypeLabel);
   toggleBorder(borderElement);
 
   handlePreview();
@@ -885,8 +891,12 @@ submit.addEventListener("click", () => {
     createChallengeOverlay.classList.remove("create-challenge-overlay--active");
     uncheckAll(checkboxesArr);
     resetContentVisibility(divsArr);
+
+    resetBorder(challengeTypeLabel);
+    resetBorder(challengeSubtypeLabel);
     resetBorder(legendsLabel);
     resetBorder(weaponsLabel);
+
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
   }, 500);
 

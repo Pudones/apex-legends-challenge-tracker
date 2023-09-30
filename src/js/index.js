@@ -673,42 +673,34 @@ headerNavButton.addEventListener("click", () => {
 // 2. The button link of the header (Desktop and Mobile)
 // 3. The text-link that appears when there's no challenges created. It's not a good practice to present a problem to the user without a solution.
 createChallengeButton.addEventListener("click", () => {
-  createChallengeOverlay.style.top = "0";
+  bodyElement.classList.add("no-scroll");
   // blurOverlay.classList.add("blur-overlay--active");
-
-  setTimeout(() => {
-    createChallengeOverlay.removeAttribute("style");
-    createChallengeOverlay.classList.add("create-challenge-overlay--active");
-    bodyElement.classList.add("no-scroll");
-    createChallengeActions.classList.add("pick-challenge-actions--active");
-  }, 550);
+  createChallengeOverlay.style.top = "0";
+  createChallengeOverlay.removeAttribute("style");
+  createChallengeOverlay.classList.add("create-challenge-overlay--active");
+  createChallengeActions.classList.add("pick-challenge-actions--active");
 });
 
 navChallengesLink.addEventListener("click", () => {
   nav.classList.remove("nav--opened");
   isNavOpen = false;
-
-  createChallengeOverlay.style.top = "0";
+  bodyElement.classList.add("no-scroll");
   // blurOverlay.classList.add("blur-overlay--active");
 
-  setTimeout(() => {
-    createChallengeOverlay.removeAttribute("style");
-    createChallengeOverlay.classList.add("create-challenge-overlay--active");
-    bodyElement.classList.add("no-scroll");
-    createChallengeActions.classList.add("pick-challenge-actions--active");
-  }, 550);
+  createChallengeOverlay.style.top = "0";
+  createChallengeOverlay.removeAttribute("style");
+  createChallengeOverlay.classList.add("create-challenge-overlay--active");
+  createChallengeActions.classList.add("pick-challenge-actions--active");
 });
 
 createChallengeTextLink.addEventListener("click", () => {
-  createChallengeOverlay.style.top = "0";
   // blurOverlay.classList.add("blur-overlay--active");
 
-  setTimeout(() => {
-    createChallengeOverlay.removeAttribute("style");
-    createChallengeOverlay.classList.add("create-challenge-overlay--active");
-    bodyElement.classList.add("no-scroll");
-    createChallengeActions.classList.add("pick-challenge-actions--active");
-  }, 550);
+  bodyElement.classList.add("no-scroll");
+  createChallengeOverlay.style.top = "0";
+  createChallengeOverlay.removeAttribute("style");
+  createChallengeOverlay.classList.add("create-challenge-overlay--active");
+  createChallengeActions.classList.add("pick-challenge-actions--active");
 });
 
 createChallengeBackBtn.addEventListener("click", () => {
@@ -725,10 +717,6 @@ createChallengeBackBtn.addEventListener("click", () => {
   createChallengeActions.classList.remove("pick-challenge-actions--active");
 
   bodyElement.classList.remove("no-scroll");
-
-  // setTimeout(() => {
-  //   blurOverlay.classList.remove("blur-overlay--active");
-  // }, 500);
 
   resetBorder(challengeTypeLabel);
   resetBorder(challengeSubtypeLabel);

@@ -1,31 +1,75 @@
 @use '../util' as u;
 
+
+
+.loading-overlay {
+  display: none;
+
+  background: #121212;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+
+  &-container {
+    @include u.flexCenter;
+    position: relative;
+    height: 100%;
+
+    .loading-icon {
+      width: 175px;
+      height: 175px;
+    }
+
+    .loading-text {
+      position: absolute;
+      top: 65%;
+      font-size: 1.6rem;
+      color: #f2f3f4;
+      font-family: 'TTLakes', sans-serif;
+    }
+  }
+}
+
+.loading--active {
+  display: block;
+}
+
+
 .confirmation-overlay {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: fixed;
-  background: rgb(0, 0, 0, 0.6);
+  background-color: rgb(0, 0, 0, 0.6);
   inset: 0;
   z-index: 4;
 
   .confirmation-window {
-    padding: 20px;
-    background: rgb(46, 20, 46);
-    text-align: center;
+    background-color: var(--mainColor);
     max-width: 350px;
+    text-align: center;
+    padding: 1.25rem;
 
     h2 {
       margin-bottom: 15px;
     }
 
-    .confirmation-btn {
-      padding: 10px 30px;
-      color: white;
-      background: none;
-      border: 1px solid white;
-      cursor: pointer;
+    .confirmation-buttons-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
+
+
+      .confirmation-btn {
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        padding: 0.625rem 1.875rem;
+        color: #f2f3f4;
+        font-size: 1.125rem;
+        cursor: pointer;
+      }
     }
   }
 }
@@ -168,7 +212,7 @@
 .warning-window {
   position: fixed;
   top: -100%;
-  z-index: 5;
+  z-index: 7;
 
   background: rgb(70, 12, 12);
 

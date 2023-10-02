@@ -44,6 +44,9 @@ const scrollToTopElement = document.querySelector(".scroll-top");
 
 const blurOverlay = document.querySelector(".blur-overlay");
 
+const loadingOverlay = document.querySelector(".loading-overlay");
+const loadingOverlayText = document.querySelector(".loading-text");
+
 const confirmationOverlay = document.querySelector(".confirmation-overlay");
 const confirmationActionText = document.querySelector(".confirmation-action");
 const confirmationYesBtn = document.querySelector(".confirmation-btn--yes");
@@ -147,7 +150,7 @@ const smoothScrollTop = block => block.scrollTo({ top: 0, behavior: "smooth" });
 
 const toggleBorder = el => el.classList.toggle("pick-challenge--selected");
 
-const resetBorder = arr => { 
+const resetBorder = arr => {
   for (el of arr) el.classList.remove("pick-challenge--selected");
 };
 
@@ -167,6 +170,12 @@ const clearElements = elementsArr => {
 
 const resetContentVisibility = arr => {
   for (el of arr) el.classList.remove("flex");
+};
+
+const createChallengeResets = () => {
+  selectedItem = undefined;
+  selectedItemsArray = [];
+  [challengeTypeSelected, challengeSubtypeSelected] = [undefined, undefined];
 };
 
 const uncheckAll = arr => {
@@ -463,6 +472,16 @@ const createOptimizerAccordion = (string, occurrence, eligibleArr) => {
         removeNoneClass(el.children[1]);
         removeNoneClass(challengeCompleteOverlay);
         saveChallenges();
+
+
+        loadingOverlay.classList.add("loading--active");
+        loadingOverlayText.textContent = "Recalculating Challenge Optimization";
+
+        setTimeout(() => {
+          loadingOverlay.classList.remove("loading--active");
+          loadingOverlayText.textContent = "";
+        }, 1000);
+
         optimizeChallenges();
         checkChallengesCreatedState();
       }
@@ -474,6 +493,15 @@ const createOptimizerAccordion = (string, occurrence, eligibleArr) => {
         parentElement.remove();
         el.remove();
         saveChallenges();
+
+        loadingOverlay.classList.add("loading--active");
+        loadingOverlayText.textContent = "Recalculating Challenge Optimization";
+
+        setTimeout(() => {
+          loadingOverlay.classList.remove("loading--active");
+          loadingOverlayText.textContent = "";
+        }, 1000);
+
         optimizeChallenges();
       }
 
@@ -530,6 +558,7 @@ const optimizeChallenges = () => {
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
     isNavOpen = false;
 
+    bodyElement.classList.remove("no-scroll");
     blurOverlay.classList.remove("blur-overlay--active");
     optimizeOverlay.classList.remove("optimize-challenge-overlay--active");
     showWarningWindow("Can't optimize challenges.", "(Maybe all challenges are different?)");
@@ -673,6 +702,8 @@ headerNavButton.addEventListener("click", () => {
 // 2. The button link of the header (Desktop and Mobile)
 // 3. The text-link that appears when there's no challenges created. It's not a good practice to present a problem to the user without a solution.
 createChallengeButton.addEventListener("click", () => {
+  createChallengeResets();
+
   bodyElement.classList.add("no-scroll");
   // blurOverlay.classList.add("blur-overlay--active");
   createChallengeOverlay.style.top = "0";
@@ -682,6 +713,8 @@ createChallengeButton.addEventListener("click", () => {
 });
 
 navChallengesLink.addEventListener("click", () => {
+  createChallengeResets();
+
   nav.classList.remove("nav--opened");
   isNavOpen = false;
   bodyElement.classList.add("no-scroll");
@@ -694,8 +727,9 @@ navChallengesLink.addEventListener("click", () => {
 });
 
 createChallengeTextLink.addEventListener("click", () => {
-  // blurOverlay.classList.add("blur-overlay--active");
+  createChallengeResets();
 
+  // blurOverlay.classList.add("blur-overlay--active");
   bodyElement.classList.add("no-scroll");
   createChallengeOverlay.style.top = "0";
   createChallengeOverlay.removeAttribute("style");
@@ -705,7 +739,7 @@ createChallengeTextLink.addEventListener("click", () => {
 
 createChallengeBackBtn.addEventListener("click", () => {
   selectedItemsArray = [];
-  selectedItem = null;
+  selectedItem = undefined;
 
   navButtonBars.forEach(el => el.classList.remove("bar-animation"));
 
@@ -807,8 +841,8 @@ challengeTypeInput.forEach(el => el.addEventListener("change", el => {
   const picksArr = [legendsPick, weaponsPick];
 
   // Resets (Emptying the selection array, reseting visual elements...)
-  selectedItemsArray = [];
-  selectedItem = null;
+  createChallengeResets();
+
   uncheckAll(checkboxesArr);
 
   resetBorder(challengeTypeLabel);
@@ -864,6 +898,30 @@ legendsInput.forEach(el => el.addEventListener("change", handleSelection));
 weaponsInput.forEach(el => el.addEventListener("change", handleSelection));
 
 submit.addEventListener("click", () => {
+  if (challengeTypeSelected === undefined) {
+    showWarningWindow("Can't create challenge.", "(Try picking a type!)");
+    return;
+  }
+
+  if (challengeSubtypeSelected === undefined) {
+    showWarningWindow("Can't create challenge.", "(Try picking a subtype!)");
+    return;
+  }
+
+  if (challengeTypeSelected === 1) {
+    if (selectedItemsArray.length < 3) {
+      showWarningWindow("Can't create challenge.", "(Try picking 3 legends!)");
+      return;
+    }
+  }
+
+  if (challengeTypeSelected === 2) {
+    if (selectedItem === undefined) {
+      showWarningWindow("Can't create challenge.", "(Try picking a weapon!)");
+      return;
+    }
+  }
+
   const challengeText = generateChallengeText();
   createChallengeCard(challengeText);
   saveChallenges();
@@ -888,7 +946,7 @@ submit.addEventListener("click", () => {
     navButtonBars.forEach(el => el.classList.remove("bar-animation"));
   }, 500);
 
-  setTimeout(() => challengeCreationSuccessDisplay.classList.remove("create-challenge-success--active"), 2000);
+  setTimeout(() => challengeCreationSuccessDisplay.classList.remove("create-challenge-success--active"), 1500);
 
   checkChallengesCreatedState();
 });

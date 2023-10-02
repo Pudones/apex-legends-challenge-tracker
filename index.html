@@ -20,8 +20,10 @@
   <div class="confirmation-overlay none">
     <div class="confirmation-window">
       <h2 class="confirmation-action"></h2>
-      <button class="confirmation-btn confirmation-btn--yes">Yes</button>
-      <button class="confirmation-btn confirmation-btn--no">No</button>
+      <div class="confirmation-buttons-wrapper">
+        <button class="confirmation-btn confirmation-btn--yes">Yes</button>
+        <button class="confirmation-btn confirmation-btn--no">No</button>
+      </div>
     </div>
   </div>
 
@@ -261,53 +263,74 @@
     </div>
 
     <div class="pick-challenge-weapons mb80">
+
       <input type="radio" name="pick-challenge-radio-name" id="assault">
       <label for="assault">
+
         <h2>Assault Rifles</h2>
-        <img src="./assets/images/icons/weaponClasses/assault.svg" alt="Assault Rifles">
+
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/assault.svg" alt="Assault Rifles">
+        </div>
+
       </label>
 
       <input type="radio" name="pick-challenge-radio-name" id="lmg">
       <label for="lmg">
         <h2>Light Machine Guns</h2>
-        <img src="./assets/images/icons/weaponClasses/light.svg" alt="Light Machine Guns">
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/light.svg" alt="Light Machine Guns">
+        </div>
       </label>
 
       <input type="radio" name="pick-challenge-radio-name" id="marksman">
       <label for="marksman">
         <h2>Marksmans</h2>
-        <img src="./assets/images/icons/weaponClasses/marksman.svg" alt="Marksmans">
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/marksman.svg" alt="Marksmans">
+        </div>
       </label>
 
       <input type="radio" name="pick-challenge-radio-name" id="pistols">
       <label for="pistols">
         <h2>Pistols</h2>
-        <img src="./assets/images/icons/weaponClasses/pistols.svg" alt="Pistols">
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/pistols.svg" alt="Pistols">
+        </div>
       </label>
 
       <input type="radio" name="pick-challenge-radio-name" id="shotguns">
       <label for="shotguns">
         <h2>Shotguns</h2>
-        <img src="./assets/images/icons/weaponClasses/shotguns.svg" alt="Shotguns">
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/shotguns.svg" alt="Shotguns">
+        </div>
       </label>
 
       <input type="radio" name="pick-challenge-radio-name" id="smg">
       <label for="smg">
         <h2>Sub Machine Guns</h2>
-        <img src="./assets/images/icons/weaponClasses/sub.svg" alt="Sub Machine Guns">
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/sub.svg" alt="Sub Machine Guns">
+        </div>
       </label>
 
       <input type="radio" name="pick-challenge-radio-name" id="sniper">
       <label for="sniper">
         <h2>Sniper Rifles</h2>
-        <img src="./assets/images/icons/weaponClasses/sniper.svg" alt="Sniper Rifles">
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/sniper.svg" alt="Sniper Rifles">
+        </div>
       </label>
 
       <input type="radio" name="pick-challenge-radio-name" id="specialwpn">
       <label for="specialwpn">
         <h2>Red Tier Weapons</h2>
-        <img src="./assets/images/icons/weaponClasses/red.svg" alt="Special Weapons">
+        <div class="label-image-wrapper">
+          <img src="./assets/images/icons/weaponClasses/red.svg" alt="Special Weapons">
+        </div>
       </label>
+
     </div>
 
     <div class="pick-challenge-actions">
@@ -323,7 +346,7 @@
         <button class="create-challenge-scroll-top-btn scroll-top up-arrow-button">
           <img src="./assets/images/icons/arrow_up.svg" alt="Up Arrow">
         </button>
-        
+
       </div>
 
     </div>
@@ -450,6 +473,13 @@
   <div class="warning-window">
     <p class="warning-text-top text-center">No optimizations to be made here!</p>
     <p class="warning-text-bottom text-center">(Maybe all challenges are different?)</p>
+  </div>
+
+  <div class="loading-overlay">
+    <div class="loading-overlay-container">
+      <img class="loading-icon" src="./assets/images/icons/loading_icon.svg" alt="Loading Icon">
+      <span class="loading-text text-center"></span>
+    </div>
   </div>
 
 </body>

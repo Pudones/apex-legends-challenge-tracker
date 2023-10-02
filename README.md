@@ -4,15 +4,13 @@
 This is a companion for Apex Legends game that will help you manage some of your challenges and provide you the "Optimal Way" of doing your challenges based on your inputs.
 
 ## How can I access it?
-
 [Click Here](https://pudones.github.io/apex-legends-challenge-tracker/)
-
-<h2>DISCLAIMER: This app is currently being worked and is HIGHLY EXPERIMENTAL, so stuff can and WILL PROBABLY break, use at your own risk.</h2>
 
 ## If you want to give some feedback, just get in contact, it will be much appreciated!
  
-<h2>Credits to:</h2>
-
+## Credits to:
 - Google Fonts
 - [LoadingIO](https://loading.io/)
 - Apex Legends Official Media
+
+## DISCLAIMER: This app is currently being worked and is HIGHLY EXPERIMENTAL, so stuff can and WILL PROBABLY break, use at your own risk.

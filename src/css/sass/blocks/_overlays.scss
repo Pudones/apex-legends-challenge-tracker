@@ -35,6 +35,71 @@
 }
 
 
+
+
+.rotation-overlay {
+  position: fixed;
+  background-color: var(--mainColor);
+  z-index: 5;
+  top: -100%;
+  height: 0;
+
+  .rotation-container {
+    position: relative;
+
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 15px;
+    @include u.flexCenter--column;
+    gap: 15px;
+
+    .rotation-back-button {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+    }
+
+    .rotation-banner {
+      width: 300px;
+      height: 300px;
+    }
+
+    .rotation-map-name,
+    .rotation-next-map {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .rotation-mode-name,
+    .rotation-next-mode {
+      font-size: 1.6rem;
+    }
+
+    .rotation-map-timer {
+      font-size: 2rem;
+      letter-spacing: 3px;
+      margin-bottom: 50px;
+    }
+
+    .rotation-next-title {
+      font-size: 1.8rem;
+    }
+  }
+}
+
+.rotation-overlay--active {
+  min-height: 100%;
+  position: fixed;
+  overflow-y: scroll;
+  inset: 0;
+}
+
+
+
+
+
 .confirmation-overlay {
   display: flex;
   flex-direction: column;
@@ -85,6 +150,7 @@
   height: 100%;
   width: 100%;
 }
+
 .blur-overlay--active {
   inset: 0;
 }
@@ -203,6 +269,7 @@
     }
   }
 }
+
 .optimize-challenge-overlay--active {
   inset: 0;
 }

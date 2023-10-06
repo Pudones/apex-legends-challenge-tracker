@@ -12,5 +12,6 @@ This is a companion for Apex Legends game that will help you manage some of your
 - Google Fonts
 - [LoadingIO](https://loading.io/)
 - Apex Legends Official Media
+- [Apex Legends Unofficial API](https://apexlegendsapi.com/)
 
 ## DISCLAIMER: This app is currently being worked and is HIGHLY EXPERIMENTAL, so stuff can and WILL PROBABLY break, use at your own risk.

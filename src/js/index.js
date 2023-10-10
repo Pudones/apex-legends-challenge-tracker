@@ -705,11 +705,12 @@ createChallengeButton.addEventListener("click", () => {
   createChallengeResets();
 
   bodyElement.classList.add("no-scroll");
-  // blurOverlay.classList.add("blur-overlay--active");
+
   createChallengeOverlay.style.top = "0";
   createChallengeOverlay.removeAttribute("style");
   createChallengeOverlay.classList.add("create-challenge-overlay--active");
   createChallengeActions.classList.add("pick-challenge-actions--active");
+  createChallengeOverlay.scrollTo({ top: 0 });
 });
 
 navChallengesLink.addEventListener("click", () => {
@@ -718,23 +719,22 @@ navChallengesLink.addEventListener("click", () => {
   nav.classList.remove("nav--opened");
   isNavOpen = false;
   bodyElement.classList.add("no-scroll");
-  // blurOverlay.classList.add("blur-overlay--active");
 
   createChallengeOverlay.style.top = "0";
   createChallengeOverlay.removeAttribute("style");
   createChallengeOverlay.classList.add("create-challenge-overlay--active");
   createChallengeActions.classList.add("pick-challenge-actions--active");
+  createChallengeOverlay.scrollTo({ top: 0 });
 });
 
 createChallengeTextLink.addEventListener("click", () => {
   createChallengeResets();
-
-  // blurOverlay.classList.add("blur-overlay--active");
   bodyElement.classList.add("no-scroll");
   createChallengeOverlay.style.top = "0";
   createChallengeOverlay.removeAttribute("style");
   createChallengeOverlay.classList.add("create-challenge-overlay--active");
   createChallengeActions.classList.add("pick-challenge-actions--active");
+  createChallengeOverlay.scrollTo({ top: 0 });
 });
 
 createChallengeBackBtn.addEventListener("click", () => {
@@ -952,84 +952,6 @@ submit.addEventListener("click", () => {
 });
 
 checkChallengesCreatedState();
-
-
-
-
-
-const mapImages = {
-  "Caustic Treatment": './assets/images/maps/caustictreatment.webp',
-  "Estates": './assets/images/maps/estates.webp',
-  "Fragment": './assets/images/maps/fragment.webp',
-  "Habitat 4": './assets/images/maps/habitat4.webp',
-  "Hammond Labs": './assets/images/maps/hammondlabs.webp',
-  "Skulltown": './assets/images/maps/skulltown.webp'
-}
-
-
-const apiKey = "d731286e43f70a37ab06ab6a42d83b4a";
-
-const navRotationLink = document.querySelector("#nav-link--rotation");
-
-const rotationOverlay = document.querySelector(".rotation-overlay");
-const rotationBanner = document.querySelector(".rotation-banner");
-const rotationMapName = document.querySelector(".rotation-map-name");
-const rotationModeName = document.querySelector(".rotation-mode-name");
-const rotationMapDuration = document.querySelector(".rotation-map-timer");
-
-const rotationNextMapName = document.querySelector(".rotation-next-map");
-const rotationNextMode = document.querySelector(".rotation-next-mode");
-
-navRotationLink.addEventListener("click", () => {
-  loadingOverlay.classList.add("loading--active");
-  loadingOverlayText.textContent = "Checking map rotation...";
-
-  setTimeout(() => {
-    loadingOverlay.classList.remove("loading--active");
-    loadingOverlayText.textContent = "";
-  }, 1600);
-
-  rotationOverlay.classList.add("rotation-overlay--active");
-  getMapRotation();
-
-  nav.classList.remove("nav--opened");
-  isNavOpen = false;
-  bodyElement.classList.add("no-scroll");
-  navButtonBars.forEach(el => el.classList.remove("bar-animation"));
-});
-
-const rotationOverlayBackBtn = document.querySelector(".rotation-back-button");
-
-let rotationInterval;
-
-const getMapRotation = () => {
-  rotationInterval = setInterval(async () => {
-    const promise = await fetch(`https://api.mozambiquehe.re/maprotation?auth=${apiKey}&version=2`)
-    const data = await promise.json();
-  
-    const nextData = data["ltm"].next;
-    const currentData = data["ltm"].current;
-  
-    rotationBanner.src = mapImages[currentData.map];
-    rotationMapName.textContent = currentData.map;
-    rotationModeName.textContent = currentData.eventName;
-  
-    const arrayTimer = Array.from(currentData.remainingTimer).splice(3, 5);
-    rotationMapDuration.textContent = arrayTimer.join("");
-  
-    rotationNextMapName.textContent = nextData.map;
-    rotationNextMode.textContent = nextData.eventName;
-  }, 1000);
-
-  rotationOverlayBackBtn.addEventListener("click", stopRotation);
-}
-
-const stopRotation = () => {
-  rotationOverlayBackBtn.removeEventListener("click", stopRotation);
-  clearInterval(rotationInterval);
-  rotationOverlay.classList.remove("rotation-overlay--active");
-  bodyElement.classList.remove("no-scroll");
-};
 
 
 

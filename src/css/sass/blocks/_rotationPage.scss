@@ -1,0 +1,9 @@
+@use '../util' as u;
+
+.rotation-main {
+  margin-bottom: 80px;
+
+  @include u.forDesktop {
+    margin-bottom: auto;
+  }
+}

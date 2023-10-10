@@ -36,64 +36,78 @@
 
 
 
+.rotation-container {
+  // background-color: var(--mainColor);
+  min-height: 100%;
+  position: relative;
 
-.rotation-overlay {
-  position: fixed;
-  background-color: var(--mainColor);
-  z-index: 5;
-  top: -100%;
-  height: 0;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  @include u.flexCenter--column;
+  gap: 15px;
+  padding-block: 50px;
 
-  .rotation-container {
+  .rotation-back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+
+  .rotation-banner {
+    width: 300px;
+    height: 300px;
+    border: 2px solid white;
+  }
+
+  .rotation-map-name {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .rotation-mode-name {
+    font-size: 1.6rem;
+  }
+
+  .rotation-map-timer {
+    font-size: 2rem;
+    letter-spacing: 3px;
+    margin-bottom: 50px;
+  }
+
+  .rotation-next-wrapper {
+    @include u.flexCenter--column;
+    border: 2px solid white;
+    padding: 15px;
+    width: 250px;
+    height: 200px;
     position: relative;
 
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    height: 100%;
-    padding: 15px;
-    @include u.flexCenter--column;
-    gap: 15px;
-
-    .rotation-back-button {
+    &--opacity {
       position: absolute;
-      top: 30px;
-      left: 30px;
-    }
-
-    .rotation-banner {
-      width: 300px;
-      height: 300px;
-    }
-
-    .rotation-map-name,
-    .rotation-next-map {
-      font-size: 2rem;
-      text-align: center;
-    }
-
-    .rotation-mode-name,
-    .rotation-next-mode {
-      font-size: 1.6rem;
-    }
-
-    .rotation-map-timer {
-      font-size: 2rem;
-      letter-spacing: 3px;
-      margin-bottom: 50px;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
     }
 
     .rotation-next-title {
-      font-size: 1.8rem;
+      font-size: 22px;
+      z-index: 2;
+    }
+
+    .rotation-next-map {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      z-index: 2;
+    }
+
+    .rotation-next-mode {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      z-index: 2;
     }
   }
-}
-
-.rotation-overlay--active {
-  min-height: 100%;
-  position: fixed;
-  overflow-y: scroll;
-  inset: 0;
 }
 
 

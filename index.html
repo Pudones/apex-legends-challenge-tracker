@@ -380,9 +380,30 @@
 
   <header>
 
-    <button class="challenges-toolbox">
-      <img src="./assets/images/icons/toolbox.svg" alt="Toolbox Icon">
-    </button>
+    <div class="mobile-nav-bar-wrapper">
+
+      <div class="mobile-nav-bar-container">
+
+        <button class="challenges-toolbox mobile-button">
+          <img src="./assets/images/icons/toolbox.svg" alt="Toolbox Icon">
+        </button>
+
+        <button class="create-challenges-button-header mobile-button">
+          <span class="create-challenges-button-bar bar--vertical"></span>
+          <span class="create-challenges-button-bar bar--horizontal"></span>
+        </button>
+
+        <button class="header-button mobile-button">
+          <div class="header-button-container">
+            <span class="header-button-bar top-bar"></span>
+            <span class="header-button-bar middle-bar"></span>
+            <span class="header-button-bar bottom-bar"></span>
+          </div>
+        </button>
+
+      </div>
+
+    </div>
 
     <div class="challenges-toolbox-wrapper">
 
@@ -408,20 +429,10 @@
 
     </div>
 
-    <button class="create-challenges-button-header">
-      <span class="create-challenges-button-bar bar--vertical"></span>
-      <span class="create-challenges-button-bar bar--horizontal"></span>
-    </button>
-
-    <button class="header-button">
-      <div class="header-button-container">
-        <span class="header-button-bar top-bar"></span>
-        <span class="header-button-bar middle-bar"></span>
-        <span class="header-button-bar bottom-bar"></span>
-      </div>
-    </button>
-
     <nav class="nav">
+      <div class="nav-icon-wrapper">
+        <img src="./assets/images/icons/apex-club-icon.svg" alt="Apex Club Icon">
+      </div>
 
       <ul class="nav-ul">
         <li class="nav-li">
@@ -432,8 +443,15 @@
           <a href="#" id="nav-link--optimize" class="nav-link">Optimize</a>
         </li>
 
-        <li class="nav-li">
-          <a href="mixtape-rotation.html" id="nav-link--rotation" class="nav-link">Map Rotation</a>
+        <li class="nav-li nav-li--dropdown">
+
+          <a href="#" class="nav-link nav-link--dropdown">Map Rotation</a>
+
+          <div class="nav-link-dropdown-wrapper" id="nav-li-rotation-dropdown">
+            <a href="br-rotation.html">Battle Royale</a>
+            <a href="mixtape-rotation.html">Mixtape</a>
+          </div>
+          
         </li>
 
         <li class="nav-li">

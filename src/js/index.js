@@ -64,6 +64,8 @@ const optimizeChallengeBackBtn = document.querySelector(".optimize-challenge-bac
 const optimizerAccordionBtns = document.getElementsByClassName("optimize-challenge-accordion-title");
 const optimizerAccordionOption = document.getElementsByClassName("optimize-challenge-option--acordion");
 
+const navLinksDropdown = document.querySelectorAll(".nav-li--dropdown");
+
 const warningTextTop = document.querySelector(".warning-text-top");
 const warningTextBottom = document.querySelector(".warning-text-bottom");
 
@@ -77,6 +79,9 @@ let selectedItem;
 let challengeTypeSelected;
 let challengeSubtypeSelected;
 let isNavOpen;
+let isDropdownClicked;
+
+
 
 // Arrays
 // This array handle elements of the challenge creation visibility.
@@ -688,6 +693,8 @@ headerNavButton.addEventListener("click", () => {
     nav.classList.remove("nav--opened");
     isNavOpen = false;
     bodyElement.classList.remove("no-scroll");
+    navLinksDropdown.forEach(el => el.classList.remove("dropdown--active"));
+    isDropdownClicked = false;
     return;
   }
 
@@ -696,6 +703,21 @@ headerNavButton.addEventListener("click", () => {
   isNavOpen = true;
   bodyElement.classList.add("no-scroll");
 });
+
+navLinksDropdown.forEach(el => el.addEventListener("click", () => {
+  const clickedElement = el;
+
+  if (isDropdownClicked) {
+    isDropdownClicked = false;
+    clickedElement.classList.remove("dropdown--active");
+    clickedElement.classList.add("dropdown--inactive");
+    return;
+  }
+
+  clickedElement.classList.remove("dropdown--inactive");
+  clickedElement.classList.add("dropdown--active");
+  isDropdownClicked = true;
+}));
 
 // The next 3 events does the same: Open the challenge creation.
 // 1. The + button on the mobile header.
@@ -952,6 +974,7 @@ submit.addEventListener("click", () => {
 });
 
 checkChallengesCreatedState();
+
 
 
 

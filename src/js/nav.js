@@ -5,12 +5,16 @@ const bodyElement = document.body;
 const topBar = document.querySelector(".top-bar");
 const midBar = document.querySelector(".middle-bar");
 const bottomBar = document.querySelector(".bottom-bar");
+const navButtonBars = [topBar, midBar, bottomBar];
+
 const headerNavButton = document.querySelector(".header-button");
 const navChallengesLink = document.querySelector("#nav-link--challenges");
 const navChallengesOptimize = document.querySelector("#nav-link--optimize");
-let isNavOpen;
+const navLinksDropdown = document.querySelectorAll(".nav-li--dropdown");
 
-const navButtonBars = [topBar, midBar, bottomBar];
+let isNavOpen;
+let isDropdownClicked;
+
 
 headerNavButton.addEventListener("click", () => {
   if (isNavOpen) {
@@ -18,6 +22,9 @@ headerNavButton.addEventListener("click", () => {
     nav.classList.remove("nav--opened");
     isNavOpen = false;
     bodyElement.classList.remove("no-scroll");
+
+    navLinksDropdown.forEach(el => el.classList.remove("dropdown--active"));
+    isDropdownClicked = false;
     return;
   }
 
@@ -26,3 +33,18 @@ headerNavButton.addEventListener("click", () => {
   isNavOpen = true;
   bodyElement.classList.add("no-scroll");
 });
+
+navLinksDropdown.forEach(el => el.addEventListener("click", () => {
+  const clickedElement = el;
+
+  if(isDropdownClicked) {
+    isDropdownClicked = false;
+    clickedElement.classList.remove("dropdown--active");
+    clickedElement.classList.add("dropdown--inactive");
+    return;
+  }
+
+  clickedElement.classList.remove("dropdown--inactive");
+  clickedElement.classList.add("dropdown--active");
+  isDropdownClicked = true;
+}));

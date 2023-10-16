@@ -1,6 +1,6 @@
 const apiKey = "d731286e43f70a37ab06ab6a42d83b4a";
 
-const navRotationLink = document.querySelector("#nav-link--rotation");
+const navRotationLink = document.querySelector("#nav-li--dropdown");
 
 // Current
 const rotationBanner = document.querySelector(".rotation-banner");
@@ -25,6 +25,7 @@ const mapImages = {
   "Habitat 4": "./assets/images/maps/habitat4.webp",
   "Hammond Labs": "./assets/images/maps/hammondlabs.webp",
   "Kings Canyon": "./assets/images/maps/kingscanyon.webp",
+  "Olympus": "./assets/images/maps/olympus.webp",
   "Siphon": "./assets/images/maps/siphon.webp",
   "Skulltown": "./assets/images/maps/skulltown.webp",
   "World's Edge": "./assets/images/maps/worldsedge.webp"
@@ -52,13 +53,11 @@ const getMapRotation = async () => {
   if (window.location.href.indexOf("mixtape") > -1) rotationCategory = "mixtape";
 
   if (rotationCategory === "br") {
-    console.log("BR");
     currentData = data["battle_royale"].current;
     nextData = data["battle_royale"].next;
   }
 
   if (rotationCategory === "mixtape") {
-    console.log("Mixtape");
     currentData = data["ltm"].current;
     nextData = data["ltm"].next;
   }

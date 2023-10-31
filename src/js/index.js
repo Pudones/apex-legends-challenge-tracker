@@ -118,6 +118,7 @@ const legendsImages = {
   bloodhound: './assets/images/legends/bloodhound.webp',
   catalyst: './assets/images/legends/catalyst.webp',
   caustic: './assets/images/legends/caustic.webp',
+  conduit: './assets/images/legends/conduit.webp',
   crypto: './assets/images/legends/crypto.webp',
   fuse: './assets/images/legends/fuse.webp',
   gibraltar: './assets/images/legends/gibraltar.webp',

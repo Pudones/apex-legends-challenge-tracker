@@ -19,16 +19,16 @@ const loadingOverlayText = document.querySelector(".loading-text");
 let rotationInterval;
 
 const mapImages = {
-  "Caustic Treatment": "./assets/images/maps/caustictreatment.webp",
-  "Estates": "./assets/images/maps/estates.webp",
-  "Fragment": "./assets/images/maps/fragment.webp",
-  "Habitat 4": "./assets/images/maps/habitat4.webp",
-  "Hammond Labs": "./assets/images/maps/hammondlabs.webp",
-  "Kings Canyon": "./assets/images/maps/kingscanyon.webp",
-  "Olympus": "./assets/images/maps/olympus.webp",
-  "Siphon": "./assets/images/maps/siphon.webp",
-  "Skulltown": "./assets/images/maps/skulltown.webp",
-  "World's Edge": "./assets/images/maps/worldsedge.webp"
+  "Caustic Treatment": "../assets/images/maps/caustictreatment.webp",
+  "Estates": "../assets/images/maps/estates.webp",
+  "Fragment": "../assets/images/maps/fragment.webp",
+  "Habitat 4": "../assets/images/maps/habitat4.webp",
+  "Hammond Labs": "../assets/images/maps/hammondlabs.webp",
+  "Kings Canyon": "../assets/images/maps/kingscanyon.webp",
+  "Olympus": "../assets/images/maps/olympus.webp",
+  "Siphon": "../assets/images/maps/siphon.webp",
+  "Skulltown": "../assets/images/maps/skulltown.webp",
+  "World's Edge": "../assets/images/maps/worldsedge.webp"
 };
 
 const formatZero = number => number < 10 ? `0${number}` : number;

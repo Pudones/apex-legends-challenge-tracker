@@ -32,6 +32,7 @@ const mapImages = {
   "Siphon": "../assets/images/maps/siphon.webp",
   "Skulltown": "../assets/images/maps/skulltown.webp",
   "Storm Point": "../assets/images/maps/stormpoint.webp",
+  "The Core": "../assets/images/maps/thecore.webp",
   "Wattson's Pylon": "../assets/images/maps/wattsonspylon.webp",
   "World's Edge": "../assets/images/maps/worldsedge.webp",
   "Zeus Station": "../assets/images/maps/zeusstation.webp"

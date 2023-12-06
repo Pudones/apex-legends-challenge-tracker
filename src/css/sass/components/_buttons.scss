@@ -1,3 +1,5 @@
+@use '../util' as u;
+
 .back-arrow-button, .up-arrow-button, .rotation-back-button, .mobile-button {
   background-color: #300606;
   width: 50px;
@@ -20,11 +22,17 @@
 }
 
 .challenges-toolbox--desktop {
+  display: none;
+
   position: fixed;
   bottom: 2%;
   left: 2%;
   width: 80px;
   height: 80px;
+
+  @include u.forDesktop {
+    display: block;
+  }
 
   img {
     width: 50px;

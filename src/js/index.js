@@ -785,6 +785,11 @@ createChallengeBackBtn.addEventListener("click", () => {
 
 scrollToTopElement.addEventListener("click", smoothScrollTop.bind(null, createChallengeOverlay));
 
+const challengeToolboxBtnDesktop = document.querySelector(".challenges-toolbox--desktop");
+
+challengeToolboxBtnDesktop.addEventListener("click", () => challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active"));
+
+
 challengeToolboxBtn.addEventListener("click", () => challengeToolboxWrapper.classList.toggle("challenges-toolbox-wrapper--active"));
 
 challengeDeleteAllBtn.addEventListener("click", () => {

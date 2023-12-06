@@ -364,6 +364,10 @@
 
   transition: .3s;
 
+  @include u.forDesktop {
+    bottom: calc(80px + 4%);
+  }
+
   .toolbox-item {
     display: flex;
     align-items: center;
